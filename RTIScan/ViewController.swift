@@ -21,5 +21,16 @@ class ViewController: UIViewController {
     }
 
 
+    
+    @IBAction func CameraOn() {
+        self.performSegue(withIdentifier: "CameraSegue", sender: self)
+    }
+    @IBAction func RenderView() {
+        self.performSegue(withIdentifier: "RenderSegue", sender: self)
+    }
+    @IBAction func ImagesView() {
+        self.performSegue(withIdentifier: "ImgSegue", sender: self)
+    }
+
 }
 

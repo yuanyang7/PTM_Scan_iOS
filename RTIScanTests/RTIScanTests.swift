@@ -7,7 +7,7 @@
 //
 
 import XCTest
-@testable import RTIScan
+//@testable import RTIScan
 
 class RTIScanTests: XCTestCase {
     
