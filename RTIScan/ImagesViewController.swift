@@ -17,6 +17,7 @@ class ImagesViewController: UIViewController, LightboxControllerDismissalDelegat
 
     var button: UIButton!
     var gallery: GalleryController!
+    //var resolvedImages : [UIImage?] = []
     
     func lightboxControllerWillDismiss(_ controller: LightboxController) {
         
@@ -27,7 +28,11 @@ class ImagesViewController: UIViewController, LightboxControllerDismissalDelegat
     }
     func galleryController(_ controller: GalleryController, didSelectImages images: [Image]) {
         controller.dismiss(animated: true, completion: nil)
-        gallery = nil
+        Image.resolve(images: images, completion: { [weak self] resolvedImages in
+            //SVProgressHUD.dismiss()
+            //  self?.showCGSizeLightbox(images: resolvedImages.compactMap({ $0 }))
+        })
+        print("done")
     }
     
     func galleryController(_ controller: GalleryController, didSelectVideo video: Video) {
@@ -97,8 +102,25 @@ class ImagesViewController: UIViewController, LightboxControllerDismissalDelegat
  */
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = UIColor.white
+        
+        Gallery.Config.VideoEditor.savesEditedVideoToLibrary = true
+        
+        button = UIButton(type: .system)
+        button.frame.size = CGSize(width: 200, height: 50)
+        button.setTitle("Open Gallery", for: UIControl.State())
+        button.addTarget(self, action: #selector(buttonTouched(_:)), for: .touchUpInside)
+        
+        view.addSubview(button)
 
         // Do any additional setup after loading the view.
+    }
+    
+    @objc func buttonTouched(_ button: UIButton) {
+        gallery = GalleryController()
+        gallery.delegate = self
+        
+        present(gallery, animated: true, completion: nil)
     }
 
     override func didReceiveMemoryWarning() {
