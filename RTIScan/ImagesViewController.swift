@@ -13,22 +13,39 @@ import AVKit
 import BSImagePicker
 import Photos
 
+//images
+class RTIImage {
+    
+    var photoImage : UIImage
+    var lightPositionX : CGFloat
+    var lightPositionY : CGFloat
+    
+    init(photoImage : UIImage) {
+        self.photoImage = photoImage
+        self.lightPositionX = 0.0
+        self.lightPositionY = 0.0
+    }
+    
+}
+
+
+
 class ImagesViewController: UIViewController  {
 
     @IBOutlet weak var imagePreview: UIImageView!
     
     var SelectedAssets = [PHAsset]()
-    var PhotoArray = [UIImage]()
+    //var PhotoArray = [UIImage]()
+    var PhotoArray = [RTIImage]()
     var PhotoPreviewIndex = 0
     
     var location = CGPoint(x:0, y:0)
     let dotLayer = CAShapeLayer();
     
     //circle parameters
-    let circlePostionX = 50;
-    let circlePostionY = 50;
-    let circleRadius = 100;
-    
+    let circlePostionX = 100.0;
+    let circlePostionY = 100.0;
+    let circleRadius = 50.0;
     
     
     //UI
@@ -42,7 +59,13 @@ class ImagesViewController: UIViewController  {
             else {
                 PhotoPreviewIndex = PhotoArray.count - 1
             }
-            self.imagePreview.image = PhotoArray[PhotoPreviewIndex]
+            self.imagePreview.image = PhotoArray[PhotoPreviewIndex].photoImage
+            
+            //drawing plots
+            dotLayer.path = UIBezierPath(ovalIn: CGRect(x: PhotoArray[PhotoPreviewIndex].lightPositionX, y: PhotoArray[PhotoPreviewIndex].lightPositionY, width: 2, height: 2)).cgPath;
+            dotLayer.strokeColor = UIColor.blue.cgColor
+            view.layer.addSublayer(dotLayer)
+            
         }
     }
     
@@ -54,7 +77,13 @@ class ImagesViewController: UIViewController  {
             else {
                 PhotoPreviewIndex = 0
             }
-            self.imagePreview.image = PhotoArray[PhotoPreviewIndex]
+            self.imagePreview.image = PhotoArray[PhotoPreviewIndex].photoImage
+            
+            //drawing plots
+            dotLayer.path = UIBezierPath(ovalIn: CGRect(x: PhotoArray[PhotoPreviewIndex].lightPositionX, y: PhotoArray[PhotoPreviewIndex].lightPositionY, width: 2, height: 2)).cgPath;
+            dotLayer.strokeColor = UIColor.blue.cgColor
+            view.layer.addSublayer(dotLayer)
+            
         }
     }
     
@@ -93,15 +122,23 @@ class ImagesViewController: UIViewController  {
         
         location = touch!.location(in: self.view)
         
-        print(location)
-        
-        //drawing plots
-        dotLayer.path = UIBezierPath(ovalIn: CGRect(x: location.x, y: location.y, width: 2, height: 2)).cgPath;
-        dotLayer.strokeColor = UIColor.blue.cgColor
-        view.layer.addSublayer(dotLayer)
-        
-        ViewPositionY.text = location.y.description
-        ViewPositionX.text = location.x.description
+        let dist = (location.x - CGFloat(circlePostionX))  *  (location.x - CGFloat(circlePostionX))
+                 + (location.y - CGFloat(circlePostionY))  *  (location.y - CGFloat(circlePostionY))
+
+        if  dist.squareRoot() <= CGFloat(circleRadius) {
+            //drawing plots
+            dotLayer.path = UIBezierPath(ovalIn: CGRect(x: location.x, y: location.y, width: 2, height: 2)).cgPath;
+            dotLayer.strokeColor = UIColor.blue.cgColor
+            view.layer.addSublayer(dotLayer)
+            
+            ViewPositionY.text = location.y.description
+            ViewPositionX.text = location.x.description
+            
+            if !PhotoArray.isEmpty {
+                PhotoArray[PhotoPreviewIndex].lightPositionX = location.x
+                PhotoArray[PhotoPreviewIndex].lightPositionY = location.y
+            }
+        }
         
     }
     
@@ -125,10 +162,10 @@ class ImagesViewController: UIViewController  {
                     
                 })
                 let data = thumbnail.jpegData(compressionQuality: 0.7)
-                let newImage = UIImage(data: data!)
+                //let newImage = UIImage(data: data!)
                 
-                
-                self.PhotoArray.append(newImage! as UIImage)
+                let photoArrayTemp = RTIImage(photoImage: UIImage(data: data!)!)
+                self.PhotoArray.append(photoArrayTemp as RTIImage)
                 
             }
             /*
@@ -172,7 +209,7 @@ class ImagesViewController: UIViewController  {
         super.viewDidLoad()
         
         let circleLayer = CAShapeLayer();
-        circleLayer.path = UIBezierPath(ovalIn: CGRect(x: circlePostionX, y: circlePostionY, width: circleRadius, height: circleRadius)).cgPath;
+        circleLayer.path = UIBezierPath(ovalIn: CGRect(x: circlePostionX - circleRadius, y: circlePostionY - circleRadius, width: circleRadius * 2, height: circleRadius * 2)).cgPath;
         view.layer.addSublayer(circleLayer)
         
     }
