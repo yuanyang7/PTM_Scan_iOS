@@ -10,70 +10,138 @@ import UIKit
 import Gallery
 import AVFoundation
 import AVKit
-import Lightbox
-import SVProgressHUD
+import BSImagePicker
+import Photos
 
-class ImagesViewController: UIViewController, LightboxControllerDismissalDelegate, GalleryControllerDelegate  {
-
-    var button: UIButton!
-    var gallery: GalleryController!
-    //var resolvedImages : [UIImage?] = []
-    
-    func lightboxControllerWillDismiss(_ controller: LightboxController) {
-        
-    }
-    func galleryControllerDidCancel(_ controller: GalleryController) {
-        controller.dismiss(animated: true, completion: nil)
-        gallery = nil
-    }
-    func galleryController(_ controller: GalleryController, didSelectImages images: [Image]) {
-        controller.dismiss(animated: true, completion: nil)
-        Image.resolve(images: images, completion: { [weak self] resolvedImages in
-            //SVProgressHUD.dismiss()
-            //  self?.showCGSizeLightbox(images: resolvedImages.compactMap({ $0 }))
-        })
-        print("done")
-    }
-    
-    func galleryController(_ controller: GalleryController, didSelectVideo video: Video) {
-        
-    }
-    
-    func galleryController(_ controller: GalleryController, requestLightbox images: [Image]) {
-        LightboxConfig.DeleteButton.enabled = true
-        
-        SVProgressHUD.show()
-        Image.resolve(images: images, completion: { [weak self] resolvedImages in
-            SVProgressHUD.dismiss()
-            self?.showLightbox(images: resolvedImages.compactMap({ $0 }))
-        })
-    }
-    
-    
-
-    func showLightbox(images: [UIImage]) {
-        guard images.count > 0 else {
-            return
-        }
-        
-        let lightboxImages = images.map({ LightboxImage(image: $0) })
-        let lightbox = LightboxController(images: lightboxImages, startIndex: 0)
-        lightbox.dismissalDelegate = self
-        
-        gallery.present(lightbox, animated: true, completion: nil)
-    }
-    
+class ImagesViewController: UIViewController  {
 
     @IBOutlet weak var imagePreview: UIImageView!
     
+    var SelectedAssets = [PHAsset]()
+    var PhotoArray = [UIImage]()
+    var PhotoPreviewIndex = 0
     
+    var location = CGPoint(x:0, y:0)
+    let dotLayer = CAShapeLayer();
+    
+    //circle parameters
+    let circlePostionX = 50;
+    let circlePostionY = 50;
+    let circleRadius = 100;
+    
+    
+    
+    //UI
+    @IBOutlet weak var ViewPositionY: UILabel!
+    @IBOutlet weak var ViewPositionX: UILabel!
+    @IBAction func previousImage(_ sender: Any) {
+        if !PhotoArray.isEmpty {
+            if PhotoPreviewIndex > 0 {
+                PhotoPreviewIndex -= 1
+            }
+            else {
+                PhotoPreviewIndex = PhotoArray.count - 1
+            }
+            self.imagePreview.image = PhotoArray[PhotoPreviewIndex]
+        }
+    }
+    
+    @IBAction func NextImage(_ sender: Any) {
+        if !PhotoArray.isEmpty {
+            if PhotoPreviewIndex < PhotoArray.count - 1 {
+                PhotoPreviewIndex += 1
+            }
+            else {
+                PhotoPreviewIndex = 0
+            }
+            self.imagePreview.image = PhotoArray[PhotoPreviewIndex]
+        }
+    }
     
     @IBAction func importImage(_ sender: Any) {
-        let gallery = GalleryController()
-        gallery.delegate = self
-        present(gallery, animated: true, completion: nil)
+        let vc = BSImagePickerViewController()
+        
+        bs_presentImagePickerController(vc, animated: true,
+                                        select: { (asset: PHAsset) -> Void in
+                                             print("Selected: \(asset)")
+        }, deselect: { (asset: PHAsset) -> Void in
+            // User deselected an assets.
+            // Do something, cancel upload?
+        }, cancel: { (assets: [PHAsset]) -> Void in
+            // User cancelled. And this where the assets currently selected.
+        }, finish: { (assets: [PHAsset]) -> Void in
+            // User finished with these assets
+            for i in 0..<assets.count
+            {
+                self.SelectedAssets.append(assets[i])
+                
+            }
+            
+            self.convertAssetToImages()
+        }, completion: nil)
     }
- 
+    
+    @IBAction func backToLastView() {
+        print("Back!")
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    
+    //Touch
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        let touch = touches.first
+        
+        location = touch!.location(in: self.view)
+        
+        print(location)
+        
+        //drawing plots
+        dotLayer.path = UIBezierPath(ovalIn: CGRect(x: location.x, y: location.y, width: 2, height: 2)).cgPath;
+        dotLayer.strokeColor = UIColor.blue.cgColor
+        view.layer.addSublayer(dotLayer)
+        
+        ViewPositionY.text = location.y.description
+        ViewPositionX.text = location.x.description
+        
+    }
+    
+    
+    //Convert Helper
+    func convertAssetToImages() -> Void {
+        
+        if SelectedAssets.count != 0{
+            
+            
+            for i in 0..<SelectedAssets.count{
+                
+                let manager = PHImageManager.default()
+                let option = PHImageRequestOptions()
+                var thumbnail = UIImage()
+                option.isSynchronous = true
+                
+                
+                manager.requestImage(for: SelectedAssets[i], targetSize: CGSize(width: 200, height: 200), contentMode: .aspectFill, options: option, resultHandler: {(result, info)->Void in
+                    thumbnail = result!
+                    
+                })
+                let data = thumbnail.jpegData(compressionQuality: 0.7)
+                let newImage = UIImage(data: data!)
+                
+                
+                self.PhotoArray.append(newImage! as UIImage)
+                
+            }
+            /*
+            self.imagePreview.animationImages = self.PhotoArray
+            self.imagePreview.animationDuration = 3.0
+            self.imagePreview.startAnimating()
+             */
+            
+        }
+        
+        
+        print("complete photo array \(self.PhotoArray)")
+    }
     
     //single image
     /*
@@ -102,35 +170,18 @@ class ImagesViewController: UIViewController, LightboxControllerDismissalDelegat
  */
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor.white
         
-        Gallery.Config.VideoEditor.savesEditedVideoToLibrary = true
+        let circleLayer = CAShapeLayer();
+        circleLayer.path = UIBezierPath(ovalIn: CGRect(x: circlePostionX, y: circlePostionY, width: circleRadius, height: circleRadius)).cgPath;
+        view.layer.addSublayer(circleLayer)
         
-        button = UIButton(type: .system)
-        button.frame.size = CGSize(width: 200, height: 50)
-        button.setTitle("Open Gallery", for: UIControl.State())
-        button.addTarget(self, action: #selector(buttonTouched(_:)), for: .touchUpInside)
-        
-        view.addSubview(button)
-
-        // Do any additional setup after loading the view.
     }
     
-    @objc func buttonTouched(_ button: UIButton) {
-        gallery = GalleryController()
-        gallery.delegate = self
-        
-        present(gallery, animated: true, completion: nil)
-    }
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    @IBAction func backToLastView() {
-        print("Back!")
-        self.dismiss(animated: true, completion: nil)
-    }
+
 
     /*
     // MARK: - Navigation
