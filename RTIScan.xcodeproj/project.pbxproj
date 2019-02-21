@@ -12,6 +12,8 @@
 		EE7F4BAC21FECB5000331FF4 /* PhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE7F4BAB21FECB5000331FF4 /* PhotoViewController.swift */; };
 		EE7F4BAE21FEE7B000331FF4 /* RenderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE7F4BAD21FEE7B000331FF4 /* RenderViewController.swift */; };
 		EE7F4BB021FEF5F200331FF4 /* Vertex.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE7F4BAF21FEF5F200331FF4 /* Vertex.swift */; };
+		EE8ED310221A368C008AA697 /* ImageClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE8ED30F221A368C008AA697 /* ImageClass.swift */; };
+		EE8ED312221A379E008AA697 /* HSHCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE8ED311221A379E008AA697 /* HSHCore.swift */; };
 		EEF529AD22100CA40097E2E9 /* ImagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF529AC22100CA40097E2E9 /* ImagesViewController.swift */; };
 		EEF9400D21FD7ECE00CBCBFF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF9400C21FD7ECE00CBCBFF /* AppDelegate.swift */; };
 		EEF9400F21FD7ECE00CBCBFF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF9400E21FD7ECE00CBCBFF /* ViewController.swift */; };
@@ -47,6 +49,9 @@
 		EE7F4BAB21FECB5000331FF4 /* PhotoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoViewController.swift; sourceTree = "<group>"; };
 		EE7F4BAD21FEE7B000331FF4 /* RenderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenderViewController.swift; sourceTree = "<group>"; };
 		EE7F4BAF21FEF5F200331FF4 /* Vertex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vertex.swift; sourceTree = "<group>"; };
+		EE8ED30F221A368C008AA697 /* ImageClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageClass.swift; sourceTree = "<group>"; };
+		EE8ED311221A379E008AA697 /* HSHCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HSHCore.swift; sourceTree = "<group>"; };
+		EE8ED313221B86DB008AA697 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = opencv2.framework; path = swix/objc/opencv2.framework; sourceTree = "<group>"; };
 		EEF529AC22100CA40097E2E9 /* ImagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesViewController.swift; sourceTree = "<group>"; };
 		EEF9400921FD7ECE00CBCBFF /* RTIScan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RTIScan.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EEF9400C21FD7ECE00CBCBFF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -92,6 +97,7 @@
 		0E45B1CBBDE13AA04D47C5DB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				EE8ED313221B86DB008AA697 /* opencv2.framework */,
 				5731F90B1D3509D33CE49EAB /* Pods_RTIScan.framework */,
 			);
 			name = Frameworks;
@@ -135,6 +141,7 @@
 				EEF9400E21FD7ECE00CBCBFF /* ViewController.swift */,
 				EEF9401021FD7ECE00CBCBFF /* Main.storyboard */,
 				EEF529AC22100CA40097E2E9 /* ImagesViewController.swift */,
+				EE8ED311221A379E008AA697 /* HSHCore.swift */,
 				EE7F4BAF21FEF5F200331FF4 /* Vertex.swift */,
 				EE7F4BAD21FEE7B000331FF4 /* RenderViewController.swift */,
 				EE7F4BAB21FECB5000331FF4 /* PhotoViewController.swift */,
@@ -142,6 +149,7 @@
 				EEF9401321FD7ED000CBCBFF /* Assets.xcassets */,
 				EEF9401521FD7ED000CBCBFF /* LaunchScreen.storyboard */,
 				EEF9401821FD7ED000CBCBFF /* Info.plist */,
+				EE8ED30F221A368C008AA697 /* ImageClass.swift */,
 			);
 			path = RTIScan;
 			sourceTree = "<group>";
@@ -327,11 +335,7 @@
 				"${BUILT_PRODUCTS_DIR}/BSGridCollectionViewLayout/BSGridCollectionViewLayout.framework",
 				"${BUILT_PRODUCTS_DIR}/BSImagePicker/BSImagePicker.framework",
 				"${BUILT_PRODUCTS_DIR}/BSImageView/BSImageView.framework",
-				"${BUILT_PRODUCTS_DIR}/Cache/Cache.framework",
-				"${BUILT_PRODUCTS_DIR}/Gallery/Gallery.framework",
-				"${BUILT_PRODUCTS_DIR}/Imaginary/Imaginary.framework",
-				"${BUILT_PRODUCTS_DIR}/Lightbox/Lightbox.framework",
-				"${BUILT_PRODUCTS_DIR}/SVProgressHUD/SVProgressHUD.framework",
+				"${BUILT_PRODUCTS_DIR}/Surge/Surge.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
@@ -340,11 +344,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BSGridCollectionViewLayout.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BSImagePicker.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BSImageView.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Cache.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Gallery.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Imaginary.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Lightbox.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SVProgressHUD.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Surge.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -362,6 +362,8 @@
 				EEF529AD22100CA40097E2E9 /* ImagesViewController.swift in Sources */,
 				EE7F4BAC21FECB5000331FF4 /* PhotoViewController.swift in Sources */,
 				EE7F4BAE21FEE7B000331FF4 /* RenderViewController.swift in Sources */,
+				EE8ED310221A368C008AA697 /* ImageClass.swift in Sources */,
+				EE8ED312221A379E008AA697 /* HSHCore.swift in Sources */,
 				EEF9400D21FD7ECE00CBCBFF /* AppDelegate.swift in Sources */,
 				EE7F4BAA21FDBEC500331FF4 /* CameraViewController.swift in Sources */,
 				EE7F4BB021FEF5F200331FF4 /* Vertex.swift in Sources */,
@@ -540,6 +542,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 556YS2S333;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/swix/objc",
+				);
 				INFOPLIST_FILE = RTIScan/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -547,6 +553,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.yuanyang.RTIScan;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_PRECOMPILE_BRIDGING_HEADER = YES;
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -559,6 +567,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 556YS2S333;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/swix/objc",
+				);
 				INFOPLIST_FILE = RTIScan/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -566,6 +578,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.yuanyang.RTIScan;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_PRECOMPILE_BRIDGING_HEADER = YES;
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -627,6 +641,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.yuanyang.RTIScanUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = RTIScan;
@@ -647,6 +662,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.yuanyang.RTIScanUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = RTIScan;

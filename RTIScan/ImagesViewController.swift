@@ -7,31 +7,19 @@
 //
 
 import UIKit
-import Gallery
 import AVFoundation
 import AVKit
 import BSImagePicker
 import Photos
+import Surge
 
-//images
-class RTIImage {
-    
-    var photoImage : UIImage
-    var lightPositionX : CGFloat
-    var lightPositionY : CGFloat
-    
-    init(photoImage : UIImage) {
-        self.photoImage = photoImage
-        self.lightPositionX = 0.0
-        self.lightPositionY = 0.0
-    }
-    
-}
 
 
 
 class ImagesViewController: UIViewController  {
-
+    
+    //test
+    
     @IBOutlet weak var imagePreview: UIImageView!
     
     var SelectedAssets = [PHAsset]()
@@ -51,6 +39,17 @@ class ImagesViewController: UIViewController  {
     //UI
     @IBOutlet weak var ViewPositionY: UILabel!
     @IBOutlet weak var ViewPositionX: UILabel!
+    @IBAction func imageProcess(_ sender: Any) {
+        
+        var PImage = ProcessingImage(toProcessImage: PhotoArray, imageNum : PhotoArray.count, imageWidth : Int(PhotoArray[0].photoImage.size.width), imageHeight : Int(PhotoArray[0].photoImage.size.height))
+        //normalize light position todo
+        PImage.normalizedLight()
+        //form matrix
+        PImage.calcMatrix()
+        
+
+        
+    }
     @IBAction func previousImage(_ sender: Any) {
         if !PhotoArray.isEmpty {
             if PhotoPreviewIndex > 0 {
@@ -70,7 +69,7 @@ class ImagesViewController: UIViewController  {
     }
     
     @IBAction func NextImage(_ sender: Any) {
-        if !PhotoArray.isEmpty {
+        if !PhotoArray.isEmpty {	
             if PhotoPreviewIndex < PhotoArray.count - 1 {
                 PhotoPreviewIndex += 1
             }
@@ -207,6 +206,8 @@ class ImagesViewController: UIViewController  {
  */
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+
         
         let circleLayer = CAShapeLayer();
         circleLayer.path = UIBezierPath(ovalIn: CGRect(x: circlePostionX - circleRadius, y: circlePostionY - circleRadius, width: circleRadius * 2, height: circleRadius * 2)).cgPath;
