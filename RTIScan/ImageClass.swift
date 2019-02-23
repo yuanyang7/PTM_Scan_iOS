@@ -94,6 +94,40 @@ class ProcessingImage {
         }
     }
     
+    func renderImage(){
+        var rgba = RGBA(image: toProcessImage[0].photoImage)!
+        for y in 0..<imageHeight{
+            for x in 0..<imageWidth {
+                var l_u = 1.0
+                var l_v = 1.0
+                let index = y * rgba.width + x
+                var pixel = rgba.pixels[index]
+                //todo!!!!!matrix
+                pixel.red =   UInt8(l_u * l_u * vectorX[x * imageWidth * 3 + y * 3 + 0][0])
+                pixel.red = pixel.red + UInt8(l_v * l_v * vectorX[x * imageWidth * 3 + y * 3 + 0][1])
+                pixel.red = pixel.red + UInt8(l_u * l_v * vectorX[x * imageWidth * 3 + y * 3 + 0][2])
+                pixel.red = pixel.red + UInt8(l_u * vectorX[x * imageWidth * 3 + y * 3 + 0][3])
+                pixel.red = pixel.red + UInt8(l_v * vectorX[x * imageWidth * 3 + y * 3 + 0][4])
+                pixel.red = pixel.red + UInt8(vectorX[x * imageWidth * 3 + y * 3 + 0][6])
+                pixel.green = UInt8(l_u * l_u * vectorX[x * imageWidth * 3 + y * 3 + 1][0])
+                pixel.green = pixel.green + UInt8(l_v * l_v * vectorX[x * imageWidth * 3 + y * 3 + 1][1])
+                pixel.green = pixel.green + UInt8(l_u * l_v * vectorX[x * imageWidth * 3 + y * 3 + 1][2])
+                pixel.green = pixel.green + UInt8(l_u * vectorX[x * imageWidth * 3 + y * 3 + 1][3])
+                pixel.green = pixel.green + UInt8(l_v * vectorX[x * imageWidth * 3 + y * 3 + 1][4])
+                pixel.green = pixel.green + UInt8(vectorX[x * imageWidth * 3 + y * 3 + 1][6])
+                pixel.blue =  UInt8(l_u * l_u * vectorX[x * imageWidth * 3 + y * 3 + 2][0])
+                pixel.blue = pixel.blue + UInt8(l_v * l_v * vectorX[x * imageWidth * 3 + y * 3 + 2][1])
+                pixel.blue = pixel.blue + UInt8(l_u * l_v * vectorX[x * imageWidth * 3 + y * 3 + 2][2])
+                pixel.blue = pixel.blue + UInt8(l_u * vectorX[x * imageWidth * 3 + y * 3 + 2][3])
+                pixel.blue = pixel.blue + UInt8(l_v * vectorX[x * imageWidth * 3 + y * 3 + 2][4])
+                pixel.blue = pixel.blue + UInt8(vectorX[x * imageWidth * 3 + y * 3 + 2][6])
+                rgba.pixels[index] = pixel
+                
+                toProcessImage[0].photoImage = rgba.toUIImage()!
+            }
+        }
+    }
+    
     func calcMatrix() {
         
        
@@ -115,17 +149,17 @@ class ProcessingImage {
             
             //matrixY
             //?
-            for x in 0..<imageWidth {
-                for y in 0..<imageHeight {
+            for x in 0..<imageHeight {
+                for y in 0..<imageWidth {
                     var redval: CGFloat = 0
                     var greenval: CGFloat = 0
                     var blueval: CGFloat = 0
                     var alphaval: CGFloat = 0
                     let pixelValue = toProcessImage[index].photoImage.getPixelColor(pos: CGPoint(x: x, y: y))
                     pixelValue.getRed(&redval, green: &greenval, blue: &blueval, alpha: &alphaval)
-                    vectorY[x * imageHeight * 3 + y * 3][index] = Double(redval)
-                    vectorY[x * imageHeight * 3 + y * 3 + 1][index] = Double(greenval)
-                    vectorY[x * imageHeight * 3 + y * 3 + 2][index] = Double(blueval)
+                    vectorY[x * imageWidth * 3 + y * 3][index] = Double(redval)
+                    vectorY[x * imageWidth * 3 + y * 3 + 1][index] = Double(greenval)
+                    vectorY[x * imageWidth * 3 + y * 3 + 2][index] = Double(blueval)
                 }
             }
         }
@@ -145,11 +179,11 @@ class ProcessingImage {
         //todo
         
         print("calculate coefficients...")
-        for x in 0..<imageWidth {
-            for y in 0..<imageHeight {
+        for x in 0..<imageHeight {
+            for y in 0..<imageWidth {
                 for c in 0...2 {
                     var B : Matrix
-                    let tempIndex = x * imageHeight * 3 + y * 3 + c
+                    let tempIndex = x * imageWidth * 3 + y * 3 + c
                     B = matMul(mat1: transpose(inputMatrix: v), mat2: [vectorY[tempIndex]])
                      for index in 0..<6 {
                         vectorX[tempIndex][index] = B[0][index] / s[index][index]

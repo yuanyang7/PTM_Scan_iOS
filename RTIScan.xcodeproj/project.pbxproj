@@ -14,6 +14,7 @@
 		EE7F4BB021FEF5F200331FF4 /* Vertex.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE7F4BAF21FEF5F200331FF4 /* Vertex.swift */; };
 		EE8ED310221A368C008AA697 /* ImageClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE8ED30F221A368C008AA697 /* ImageClass.swift */; };
 		EE8ED312221A379E008AA697 /* HSHCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE8ED311221A379E008AA697 /* HSHCore.swift */; };
+		EE8ED35422213C59008AA697 /* rgba.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE8ED35322213C59008AA697 /* rgba.swift */; };
 		EEF529AD22100CA40097E2E9 /* ImagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF529AC22100CA40097E2E9 /* ImagesViewController.swift */; };
 		EEF9400D21FD7ECE00CBCBFF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF9400C21FD7ECE00CBCBFF /* AppDelegate.swift */; };
 		EEF9400F21FD7ECE00CBCBFF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF9400E21FD7ECE00CBCBFF /* ViewController.swift */; };
@@ -52,6 +53,7 @@
 		EE8ED30F221A368C008AA697 /* ImageClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageClass.swift; sourceTree = "<group>"; };
 		EE8ED311221A379E008AA697 /* HSHCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HSHCore.swift; sourceTree = "<group>"; };
 		EE8ED313221B86DB008AA697 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = opencv2.framework; path = swix/objc/opencv2.framework; sourceTree = "<group>"; };
+		EE8ED35322213C59008AA697 /* rgba.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = rgba.swift; sourceTree = "<group>"; };
 		EEF529AC22100CA40097E2E9 /* ImagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesViewController.swift; sourceTree = "<group>"; };
 		EEF9400921FD7ECE00CBCBFF /* RTIScan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RTIScan.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EEF9400C21FD7ECE00CBCBFF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -150,6 +152,7 @@
 				EEF9401521FD7ED000CBCBFF /* LaunchScreen.storyboard */,
 				EEF9401821FD7ED000CBCBFF /* Info.plist */,
 				EE8ED30F221A368C008AA697 /* ImageClass.swift */,
+				EE8ED35322213C59008AA697 /* rgba.swift */,
 			);
 			path = RTIScan;
 			sourceTree = "<group>";
@@ -365,6 +368,7 @@
 				EE8ED310221A368C008AA697 /* ImageClass.swift in Sources */,
 				EE8ED312221A379E008AA697 /* HSHCore.swift in Sources */,
 				EEF9400D21FD7ECE00CBCBFF /* AppDelegate.swift in Sources */,
+				EE8ED35422213C59008AA697 /* rgba.swift in Sources */,
 				EE7F4BAA21FDBEC500331FF4 /* CameraViewController.swift in Sources */,
 				EE7F4BB021FEF5F200331FF4 /* Vertex.swift in Sources */,
 			);

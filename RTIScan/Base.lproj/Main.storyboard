@@ -121,7 +121,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="H5d-t5-yX5">
-                                <rect key="frame" x="304" y="566" width="55" height="30"/>
+                                <rect key="frame" x="304" y="529" width="55" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Process"/>
                                 <connections>
@@ -134,6 +134,14 @@
                                 <state key="normal" title="Previous"/>
                                 <connections>
                                     <action selector="previousImage:" destination="wuH-af-Chn" eventType="touchUpInside" id="4GF-RV-xHi"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PSg-6R-2bQ">
+                                <rect key="frame" x="304" y="557" width="45" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="render"/>
+                                <connections>
+                                    <action selector="imageRender:" destination="wuH-af-Chn" eventType="touchUpInside" id="2NZ-70-r7K"/>
                                 </connections>
                             </button>
                         </subviews>

@@ -35,19 +35,25 @@ class ImagesViewController: UIViewController  {
     let circlePostionY = 100.0;
     let circleRadius = 50.0;
     
+    var PImage : ProcessingImage!
+    
     
     //UI
     @IBOutlet weak var ViewPositionY: UILabel!
     @IBOutlet weak var ViewPositionX: UILabel!
     @IBAction func imageProcess(_ sender: Any) {
         
-        var PImage = ProcessingImage(toProcessImage: PhotoArray, imageNum : PhotoArray.count, imageWidth : Int(PhotoArray[0].photoImage.size.width), imageHeight : Int(PhotoArray[0].photoImage.size.height))
+        PImage = ProcessingImage(toProcessImage: PhotoArray, imageNum : PhotoArray.count, imageWidth : Int(PhotoArray[0].photoImage.size.width), imageHeight : Int(PhotoArray[0].photoImage.size.height))
         //normalize light position todo
         PImage.normalizedLight()
         //form matrix
         PImage.calcMatrix()
-        
 
+        
+    }
+    @IBAction func imageRender(_ sender: Any) {
+        PImage.renderImage()
+        self.imagePreview.image = PImage.toProcessImage[0].photoImage
         
     }
     @IBAction func previousImage(_ sender: Any) {
