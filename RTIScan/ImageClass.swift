@@ -74,9 +74,11 @@ class ProcessingImage {
         self.imageHeight = imageHeight
         
         //initialized matrix
-        self.vectorX = [Vector](repeating: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0], count: imageWidth*imageHeight*imageNum)
         let temp = [Double](repeating: 0.0, count: imageNum)
-        self.vectorY = [Vector](repeating: temp, count: imageWidth*imageHeight*imageNum)
+        self.matrixA = Matrix(repeating: temp, count: 6)
+        self.vectorX = [Vector](repeating: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0], count: imageWidth*imageHeight*3)
+
+        self.vectorY = [Vector](repeating: temp, count: imageWidth*imageHeight*3)
 
         //self.vectorY_G = [Vector](repeating: temp, count: imageWidth*imageHeight*imageNum)
         //self.vectorY_B = [Vector](repeating: temp, count: imageWidth*imageHeight*imageNum)
@@ -85,12 +87,17 @@ class ProcessingImage {
     
     func normalizedLight() {
         for (_, image) in toProcessImage.enumerated() {
+            image.lightPositionX /= CGFloat(50.0)
+            image.lightPositionY /= CGFloat(50.0)
+            
+            /*
             image.lightPositionZ = sqrt(image.lightPositionX * image.lightPositionX
                                       + image.lightPositionY * image.lightPositionY)
             //todo: normalized mag
             image.lightPositionX /= image.lightPositionZ
             image.lightPositionY /= image.lightPositionZ
             image.lightPositionZ = 1
+            */
         }
     }
     
@@ -98,11 +105,17 @@ class ProcessingImage {
         var rgba = RGBA(image: toProcessImage[0].photoImage)!
         for y in 0..<imageHeight{
             for x in 0..<imageWidth {
-                var l_u = 1.0
-                var l_v = 1.0
+                var l_u = 0.5
+                var l_v = 0.5
                 let index = y * rgba.width + x
                 var pixel = rgba.pixels[index]
                 //todo!!!!!matrix
+                let light_matrix = Vector(arrayLiteral: l_u * l_u, l_v * l_v, l_u * l_v, l_u, l_v, 1)
+                let redm = matMul(mat1: transpose(inputMatrix: [light_matrix]), mat2: [vectorX[x * imageWidth * 3 + y * 3 + 0]])
+                let greenm = matMul(mat1: transpose(inputMatrix: [light_matrix]), mat2: [vectorX[x * imageWidth * 3 + y * 3 + 1]])
+                let bluem = matMul(mat1: transpose(inputMatrix: [light_matrix]), mat2: [vectorX[x * imageWidth * 3 + y * 3 + 2]])
+                //print("pixel", red[0][0] * 255.0, green[0][0] * 255.0, blue[0][0] * 255.0)
+                /*
                 pixel.red =   UInt8(l_u * l_u * vectorX[x * imageWidth * 3 + y * 3 + 0][0])
                 pixel.red = pixel.red + UInt8(l_v * l_v * vectorX[x * imageWidth * 3 + y * 3 + 0][1])
                 pixel.red = pixel.red + UInt8(l_u * l_v * vectorX[x * imageWidth * 3 + y * 3 + 0][2])
@@ -121,6 +134,37 @@ class ProcessingImage {
                 pixel.blue = pixel.blue + UInt8(l_u * vectorX[x * imageWidth * 3 + y * 3 + 2][3])
                 pixel.blue = pixel.blue + UInt8(l_v * vectorX[x * imageWidth * 3 + y * 3 + 2][4])
                 pixel.blue = pixel.blue + UInt8(vectorX[x * imageWidth * 3 + y * 3 + 2][6])
+                */
+                var red:Int = Int(redm[0][0])
+                var green:Int = Int(greenm[0][0])
+                var blue:Int = Int(bluem[0][0])
+                if red < 0{
+                    red = 0
+                }
+                else if red > 255{
+                    red = 255
+                    
+                }
+                if green < 0 {
+                    green = 0
+                    
+                }
+                else if green > 255{
+                    green = 255
+                    
+                }
+                if blue < 0{
+                    blue = 0
+                }
+                else if blue > 255{
+                    blue = 255
+                    
+                }
+                pixel.red = UInt8(red)
+                pixel.green = UInt8(green)
+                pixel.blue = UInt8(blue)
+                
+                
                 rgba.pixels[index] = pixel
                 
                 toProcessImage[0].photoImage = rgba.toUIImage()!
@@ -136,6 +180,16 @@ class ProcessingImage {
             print("Processing image", index)
             
             //matrixA
+            let lu = toProcessImage[index].lightPositionX
+            let lv = toProcessImage[index].lightPositionY
+            print("lu and lv", lu, lv)
+            matrixA[0][index] = Double(lu * lu)
+            matrixA[1][index] = Double(lv * lv)
+            matrixA[2][index] = Double(lu * lv)
+            matrixA[3][index] = Double(lu)
+            matrixA[4][index] = Double(lv)
+            matrixA[5][index] = Double(1.0)
+            /*
             var doubleTemp = [Double]()
             let lu = toProcessImage[index].lightPositionX
             let lv = toProcessImage[index].lightPositionY
@@ -144,8 +198,9 @@ class ProcessingImage {
             doubleTemp.append(Double(lu * lv))
             doubleTemp.append(Double(lu))
             doubleTemp.append(Double(lv))
-            doubleTemp.append(Double(1))
+            doubleTemp.append(Double(1.0))
             matrixA.append(doubleTemp)
+             */
             
             //matrixY
             //?
@@ -172,8 +227,9 @@ class ProcessingImage {
         
         (u,s,v) = svd(inputMatrix: matrixA)
         print("svd calculation done.")
-        print(s)
+        print("s", s)
         print("u", u)
+        print("v", v)
         print("y", vectorY[0])
         //https://blog.csdn.net/qq_xuanshuang/article/details/79639240
         //todo
@@ -184,16 +240,18 @@ class ProcessingImage {
                 for c in 0...2 {
                     var B : Matrix
                     let tempIndex = x * imageWidth * 3 + y * 3 + c
-                    B = matMul(mat1: transpose(inputMatrix: v), mat2: [vectorY[tempIndex]])
+                    B = matMul(mat1: transpose(inputMatrix: u), mat2: [vectorY[tempIndex]])
+                    //print("B", B)
                      for index in 0..<6 {
                         vectorX[tempIndex][index] = B[0][index] / s[index][index]
                         }
+                    //print(vectorX[tempIndex], matrixA[0])
                     
                 }
             }
         }
         print("matrix calculation completed")
-
+ 
  
 
         

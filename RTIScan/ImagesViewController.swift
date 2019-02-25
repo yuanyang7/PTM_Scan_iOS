@@ -67,7 +67,7 @@ class ImagesViewController: UIViewController  {
             self.imagePreview.image = PhotoArray[PhotoPreviewIndex].photoImage
             
             //drawing plots
-            dotLayer.path = UIBezierPath(ovalIn: CGRect(x: PhotoArray[PhotoPreviewIndex].lightPositionX, y: PhotoArray[PhotoPreviewIndex].lightPositionY, width: 2, height: 2)).cgPath;
+            dotLayer.path = UIBezierPath(ovalIn: CGRect(x: PhotoArray[PhotoPreviewIndex].lightPositionX + CGFloat(circlePostionX), y: PhotoArray[PhotoPreviewIndex].lightPositionY + CGFloat(circlePostionY), width: 2, height: 2)).cgPath;
             dotLayer.strokeColor = UIColor.blue.cgColor
             view.layer.addSublayer(dotLayer)
             
@@ -85,7 +85,7 @@ class ImagesViewController: UIViewController  {
             self.imagePreview.image = PhotoArray[PhotoPreviewIndex].photoImage
             
             //drawing plots
-            dotLayer.path = UIBezierPath(ovalIn: CGRect(x: PhotoArray[PhotoPreviewIndex].lightPositionX, y: PhotoArray[PhotoPreviewIndex].lightPositionY, width: 2, height: 2)).cgPath;
+            dotLayer.path = UIBezierPath(ovalIn: CGRect(x: PhotoArray[PhotoPreviewIndex].lightPositionX + CGFloat(circlePostionX), y: PhotoArray[PhotoPreviewIndex].lightPositionY + CGFloat(circlePostionY), width: 2, height: 2)).cgPath;
             dotLayer.strokeColor = UIColor.blue.cgColor
             view.layer.addSublayer(dotLayer)
             
@@ -140,8 +140,8 @@ class ImagesViewController: UIViewController  {
             ViewPositionX.text = location.x.description
             
             if !PhotoArray.isEmpty {
-                PhotoArray[PhotoPreviewIndex].lightPositionX = location.x
-                PhotoArray[PhotoPreviewIndex].lightPositionY = location.y
+                PhotoArray[PhotoPreviewIndex].lightPositionX = location.x - CGFloat(circlePostionX)
+                PhotoArray[PhotoPreviewIndex].lightPositionY = location.y - CGFloat(circlePostionY)
             }
         }
         
