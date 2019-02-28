@@ -62,6 +62,9 @@ class ProcessingImage {
     let imageWidth : Int
     let imageHeight : Int
     
+    var LightXRender = 0.5
+    var LightYRender = 0.5
+    
 
     
     
@@ -105,8 +108,8 @@ class ProcessingImage {
         var rgba = RGBA(image: toProcessImage[0].photoImage)!
         for y in 0..<imageHeight{
             for x in 0..<imageWidth {
-                var l_u = 0.5
-                var l_v = 0.5
+                var l_u = LightXRender
+                var l_v = LightYRender
                 let index = y * rgba.width + x
                 var pixel = rgba.pixels[index]
                 //todo!!!!!matrix
@@ -135,37 +138,43 @@ class ProcessingImage {
                 pixel.blue = pixel.blue + UInt8(l_v * vectorX[x * imageWidth * 3 + y * 3 + 2][4])
                 pixel.blue = pixel.blue + UInt8(vectorX[x * imageWidth * 3 + y * 3 + 2][6])
                 */
-                var red:Int = Int(redm[0][0])
-                var green:Int = Int(greenm[0][0])
-                var blue:Int = Int(bluem[0][0])
+                
+                var red:Int = Int(redm[0][0] * 255)
+                var green:Int = Int(greenm[0][0] * 255)
+                var blue:Int = Int(bluem[0][0] * 255)
+                //print(red, green, blue)
                 if red < 0{
-                    red = 0
+                    red = -1 * red
                 }
-                else if red > 255{
+                if red > 255{
                     red = 255
                     
                 }
                 if green < 0 {
-                    green = 0
+                    green = -1 * green
                     
                 }
-                else if green > 255{
+                if green > 255{
                     green = 255
                     
                 }
                 if blue < 0{
-                    blue = 0
+                    blue = -1 * blue
                 }
-                else if blue > 255{
+                if blue > 255{
                     blue = 255
                     
                 }
+                //print(red)
+                //print("1, ",pixel, pixel.red )
                 pixel.red = UInt8(red)
                 pixel.green = UInt8(green)
                 pixel.blue = UInt8(blue)
+                //print("red", red, pixel.red)
                 
                 
                 rgba.pixels[index] = pixel
+                //print(pixel, pixel.red)
                 
                 toProcessImage[0].photoImage = rgba.toUIImage()!
             }

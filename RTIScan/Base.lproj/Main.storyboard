@@ -73,11 +73,11 @@
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oHN-br-lFc">
-                                <rect key="frame" x="0.0" y="218" width="291" height="378"/>
+                                <rect key="frame" x="0.0" y="218" width="256" height="342"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NX8-ih-teU">
-                                <rect key="frame" x="304" y="442" width="32" height="30"/>
+                                <rect key="frame" x="272" y="283" width="32" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Next"/>
                                 <connections>
@@ -120,16 +120,8 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="H5d-t5-yX5">
-                                <rect key="frame" x="304" y="529" width="55" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Process"/>
-                                <connections>
-                                    <action selector="imageProcess:" destination="wuH-af-Chn" eventType="touchUpInside" id="3mQ-sj-hIK"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qxV-je-jCA">
-                                <rect key="frame" x="300" y="412" width="59" height="30"/>
+                                <rect key="frame" x="272" y="265" width="59" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Previous"/>
                                 <connections>
@@ -144,12 +136,79 @@
                                     <action selector="imageRender:" destination="wuH-af-Chn" eventType="touchUpInside" id="2NZ-70-r7K"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZC8-VI-rfH">
+                                <rect key="frame" x="272" y="218" width="87" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Select Circle"/>
+                                <connections>
+                                    <action selector="SelectCircle:" destination="wuH-af-Chn" eventType="touchUpInside" id="avg-ty-Vz0"/>
+                                </connections>
+                            </button>
+                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="100" minValue="0.0" maxValue="256" translatesAutoresizingMaskIntoConstraints="NO" id="btX-aJ-YOu">
+                                <rect key="frame" x="6" y="180" width="118" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <connections>
+                                    <action selector="SliderCircleX:" destination="wuH-af-Chn" eventType="valueChanged" id="osh-Uf-8SS"/>
+                                </connections>
+                            </slider>
+                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="300" minValue="218" maxValue="560" translatesAutoresizingMaskIntoConstraints="NO" id="JAk-V9-2Jo">
+                                <rect key="frame" x="128" y="180" width="118" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <connections>
+                                    <action selector="SliderCircleY:" destination="wuH-af-Chn" eventType="valueChanged" id="4oN-Lm-qtO"/>
+                                </connections>
+                            </slider>
+                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="25" minValue="0.0" maxValue="50" translatesAutoresizingMaskIntoConstraints="NO" id="QvR-HQ-aRq">
+                                <rect key="frame" x="250" y="181" width="118" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <connections>
+                                    <action selector="SliderCircleR:" destination="wuH-af-Chn" eventType="valueChanged" id="aO2-5R-pgI"/>
+                                </connections>
+                            </slider>
+                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="XUe-lH-H5J">
+                                <rect key="frame" x="259" y="447" width="118" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <connections>
+                                    <action selector="SliderLightX:" destination="wuH-af-Chn" eventType="valueChanged" id="6wT-CR-2ne"/>
+                                </connections>
+                            </slider>
+                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="Acp-yq-OHo">
+                                <rect key="frame" x="259" y="492" width="118" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <connections>
+                                    <action selector="SliderLightY:" destination="wuH-af-Chn" eventType="valueChanged" id="SS0-CY-Bj9"/>
+                                </connections>
+                            </slider>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="lx:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aQE-cu-Spx">
+                                <rect key="frame" x="261" y="418" width="43" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="ly:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jdt-7c-Gfh">
+                                <rect key="frame" x="264" y="484" width="50" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="H5d-t5-yX5">
+                                <rect key="frame" x="304" y="318" width="55" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Process"/>
+                                <connections>
+                                    <action selector="imageProcess:" destination="wuH-af-Chn" eventType="touchUpInside" id="3mQ-sj-hIK"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="N4d-vB-Jvc"/>
                     </view>
                     <connections>
                         <outlet property="ImagePreview" destination="oHN-br-lFc" id="Yzj-u4-Jg6"/>
+                        <outlet property="SliderLightXText" destination="aQE-cu-Spx" id="axW-vp-B2x"/>
+                        <outlet property="SliderLightYText" destination="jdt-7c-Gfh" id="g0k-oT-Q3P"/>
                         <outlet property="ViewPositionX" destination="mrI-EG-kGt" id="kdj-C8-pu2"/>
                         <outlet property="ViewPositionY" destination="DvV-hK-XCc" id="P6F-lL-5N0"/>
                         <outlet property="imagePreview" destination="oHN-br-lFc" id="qrB-EV-VUo"/>

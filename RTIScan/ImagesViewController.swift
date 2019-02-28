@@ -29,18 +29,35 @@ class ImagesViewController: UIViewController  {
     
     var location = CGPoint(x:0, y:0)
     let dotLayer = CAShapeLayer();
+    let sqaureUponImage = CAShapeLayer();
+    let circleLayer = CAShapeLayer();
     
     //circle parameters
     let circlePostionX = 100.0;
     let circlePostionY = 100.0;
     let circleRadius = 50.0;
     
+    
     var PImage : ProcessingImage!
+    
+    //select circle
+    var SliderCircleXVar = 0
+    var SliderCircleYVar = 0
+    var SliderCircleRVar = 25
     
     
     //UI
+    
+    var CropImageOverlap : UIImageView!
+    
+    //@IBOutlet weak var SliderCircleXVar: UISlider!
+    //@IBOutlet weak var SliderCircleYVar: UISlider!
+    //@IBOutlet weak var SliderCircleRVar: UISlider!
+    
     @IBOutlet weak var ViewPositionY: UILabel!
     @IBOutlet weak var ViewPositionX: UILabel!
+    @IBOutlet weak var SliderLightXText: UILabel!
+    @IBOutlet weak var SliderLightYText: UILabel!
     @IBAction func imageProcess(_ sender: Any) {
         
         PImage = ProcessingImage(toProcessImage: PhotoArray, imageNum : PhotoArray.count, imageWidth : Int(PhotoArray[0].photoImage.size.width), imageHeight : Int(PhotoArray[0].photoImage.size.height))
@@ -51,6 +68,35 @@ class ImagesViewController: UIViewController  {
 
         
     }
+  
+    
+    @IBAction func SliderCircleX(_ sender: UISlider) {
+        SliderCircleXVar = Int(sender.value)
+        drawSelectedCircle()
+    }
+    @IBAction func SliderCircleY(_ sender: UISlider) {
+        SliderCircleYVar = Int(sender.value)
+        drawSelectedCircle()
+    }
+    @IBAction func SliderCircleR(_ sender: UISlider) {
+        SliderCircleRVar = Int(sender.value)
+        drawSelectedCircle()
+    }
+    @IBAction func SelectCircle(_ sender: Any) {
+        
+    }
+    @IBAction func SliderLightX(_ sender: UISlider) {
+        if (PImage != nil){
+            PImage.LightXRender = Double(sender.value)}
+        SliderLightXText.text = String(sender.value)
+    }
+    @IBAction func SliderLightY(_ sender: UISlider) {
+        if (PImage != nil) {
+            PImage.LightYRender = Double(sender.value)}
+        SliderLightYText.text = String(sender.value)
+    }
+    
+    
     @IBAction func imageRender(_ sender: Any) {
         PImage.renderImage()
         self.imagePreview.image = PImage.toProcessImage[0].photoImage
@@ -66,10 +112,30 @@ class ImagesViewController: UIViewController  {
             }
             self.imagePreview.image = PhotoArray[PhotoPreviewIndex].photoImage
             
+            
+            //crop image
+            UIGraphicsBeginImageContextWithOptions(CGSize(width: CGFloat(SliderCircleRVar * 2), height: CGFloat(SliderCircleRVar * 2)), true, CGFloat(1.0))
+            PhotoArray[PhotoPreviewIndex].photoImage.draw(at: CGPoint(x: -SliderCircleXVar, y: -SliderCircleYVar + 218))
+            let croppedImage = UIGraphicsGetImageFromCurrentImageContext()
+            print(croppedImage?.size)
+            UIGraphicsEndImageContext()
+            self.CropImageOverlap.image = croppedImage
+            self.view.addSubview(CropImageOverlap)
+            view.layer.addSublayer(circleLayer)
+            
+            /*
+            let cropImg = CIImage(image: PhotoArray[PhotoPreviewIndex].photoImage)!.cropped(to: CGRect(x: SliderCircleXVar, y: (SliderCircleYVar - 218), width: SliderCircleRVar, height: SliderCircleRVar))
+            let cropUIImg = UIImage(ciImage: cropImg, scale: 1, orientation: PhotoArray[PhotoPreviewIndex].photoImage.imageOrientation)
+            self.imagePreview.image = cropUIImg
+            //self.view.addSubview(CropImageOverlap)
+            */
+            
+            
             //drawing plots
             dotLayer.path = UIBezierPath(ovalIn: CGRect(x: PhotoArray[PhotoPreviewIndex].lightPositionX + CGFloat(circlePostionX), y: PhotoArray[PhotoPreviewIndex].lightPositionY + CGFloat(circlePostionY), width: 2, height: 2)).cgPath;
             dotLayer.strokeColor = UIColor.blue.cgColor
             view.layer.addSublayer(dotLayer)
+            
             
         }
     }
@@ -83,6 +149,16 @@ class ImagesViewController: UIViewController  {
                 PhotoPreviewIndex = 0
             }
             self.imagePreview.image = PhotoArray[PhotoPreviewIndex].photoImage
+            
+            //crop image
+            UIGraphicsBeginImageContextWithOptions(CGSize(width: CGFloat(SliderCircleRVar * 2), height: CGFloat(SliderCircleRVar * 2)), true, CGFloat(1.0))
+            PhotoArray[PhotoPreviewIndex].photoImage.draw(at: CGPoint(x: -SliderCircleXVar, y: -SliderCircleYVar + 218))
+            let croppedImage = UIGraphicsGetImageFromCurrentImageContext()
+            print(croppedImage?.size)
+            UIGraphicsEndImageContext()
+            self.CropImageOverlap.image = croppedImage
+            self.view.addSubview(CropImageOverlap)
+            view.layer.addSublayer(circleLayer)
             
             //drawing plots
             dotLayer.path = UIBezierPath(ovalIn: CGRect(x: PhotoArray[PhotoPreviewIndex].lightPositionX + CGFloat(circlePostionX), y: PhotoArray[PhotoPreviewIndex].lightPositionY + CGFloat(circlePostionY), width: 2, height: 2)).cgPath;
@@ -113,6 +189,7 @@ class ImagesViewController: UIViewController  {
             
             self.convertAssetToImages()
         }, completion: nil)
+        
     }
     
     @IBAction func backToLastView() {
@@ -147,7 +224,12 @@ class ImagesViewController: UIViewController  {
         
     }
     
-    
+    //draw circle on the image
+    func drawSelectedCircle() {
+        sqaureUponImage.path = UIBezierPath(ovalIn: CGRect(x: Double(SliderCircleXVar), y: Double(SliderCircleYVar), width: Double(SliderCircleRVar) * 2, height: Double(SliderCircleRVar) * 2)).cgPath;
+        sqaureUponImage.opacity = 0.5
+        view.layer.addSublayer(sqaureUponImage)
+    }
     //Convert Helper
     func convertAssetToImages() -> Void {
         
@@ -214,10 +296,14 @@ class ImagesViewController: UIViewController  {
         super.viewDidLoad()
         
 
-        
-        let circleLayer = CAShapeLayer();
+        //draw black circle
         circleLayer.path = UIBezierPath(ovalIn: CGRect(x: circlePostionX - circleRadius, y: circlePostionY - circleRadius, width: circleRadius * 2, height: circleRadius * 2)).cgPath;
+        circleLayer.opacity = 0.5
         view.layer.addSublayer(circleLayer)
+        
+        //create new image view
+        CropImageOverlap  = UIImageView(frame: CGRect(x: circlePostionX - circleRadius, y: circlePostionY - circleRadius, width: circleRadius * 2, height: circleRadius * 2));
+
         
     }
     
