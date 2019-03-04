@@ -48,6 +48,17 @@ class RTIImage {
     
 }
 
+
+//store
+class RenderImgtoFile {
+    var pixels : [[UInt8]]
+    
+    init(imageWidth : Int, imageHeight : Int, light_count : Int) {
+        let pixels_tmp = [UInt8](repeating: 0, count: imageWidth*imageHeight*3)
+        self.pixels = [[UInt8]](repeating: pixels_tmp, count: light_count)
+    }
+}
+
 class ProcessingImage {
     
     //test
@@ -64,6 +75,11 @@ class ProcessingImage {
     
     var LightXRender = 0.5
     var LightYRender = 0.5
+    
+    var RenderingImgtoFile : RenderImgtoFile
+    var flagFinishRender : Bool = false
+    var renderingBufferCount : Int = 4
+    var renderingBufferStep : Double = 0.5
     
 
     
@@ -82,6 +98,8 @@ class ProcessingImage {
         self.vectorX = [Vector](repeating: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0], count: imageWidth*imageHeight*3)
 
         self.vectorY = [Vector](repeating: temp, count: imageWidth*imageHeight*3)
+        
+        self.RenderingImgtoFile = RenderImgtoFile(imageWidth : self.imageWidth, imageHeight : self.imageHeight, light_count : self.renderingBufferCount * self.renderingBufferCount)
 
         //self.vectorY_G = [Vector](repeating: temp, count: imageWidth*imageHeight*imageNum)
         //self.vectorY_B = [Vector](repeating: temp, count: imageWidth*imageHeight*imageNum)
@@ -103,41 +121,95 @@ class ProcessingImage {
             */
         }
     }
+    func renderImageResult(l_u_raw : Double, l_v_raw : Double) {
+        var l_u = l_u_raw / 50 + 1
+        var l_v = l_v_raw / 50 + 1
+        l_u /= self.renderingBufferStep
+        l_v /= self.renderingBufferStep
+        print("l position", l_u, l_v)
+        var rgba = RGBA(image: toProcessImage[0].photoImage)!
+        print("image size", rgba.width, imageWidth)
+        for x in 0..<imageHeight{
+            for y in 0..<imageWidth {
+                let index = x * rgba.width + y
+                var pixel = rgba.pixels[index]
+                pixel.red = self.RenderingImgtoFile.pixels[Int(l_u) * self.renderingBufferCount + Int(l_v)][x * imageWidth * 3 + y * 3]
+                pixel.green = self.RenderingImgtoFile.pixels[Int(l_u) * self.renderingBufferCount + Int(l_v)][x * imageWidth * 3 + y * 3 + 1]
+                pixel.blue = self.RenderingImgtoFile.pixels[Int(l_u) * self.renderingBufferCount + Int(l_v)][x * imageWidth * 3 + y * 3 + 2]
+                rgba.pixels[index] = pixel
+            }
+        }
+        
+        toProcessImage[0].photoImage = rgba.toUIImage()!
+        
+    }
+    func renderImageFUll() {
+        for l_u in stride(from: -1, to: 1, by: self.renderingBufferStep) {
+            for l_v in stride(from: -1, to: 1, by: self.renderingBufferStep) {
+                let tmp =  ((l_u + 1) / self.renderingBufferStep) * Double(self.renderingBufferCount)
+                let l_index = Int( tmp + (l_v + 1) / self.renderingBufferStep)
+                print("picels store in", l_index)
+                for x in 0..<imageHeight{
+                    for y in 0..<imageWidth {
+                        //todo!!!!!matrix
+                        let light_matrix = Vector(arrayLiteral: l_u * l_u, l_v * l_v, l_u * l_v, l_u, l_v, 1)
+                        let redm = matMul(mat1: transpose(inputMatrix: [light_matrix]), mat2: [vectorX[x * imageWidth * 3 + y * 3 + 0]])
+                        let greenm = matMul(mat1: transpose(inputMatrix: [light_matrix]), mat2: [vectorX[x * imageWidth * 3 + y * 3 + 1]])
+                        let bluem = matMul(mat1: transpose(inputMatrix: [light_matrix]), mat2: [vectorX[x * imageWidth * 3 + y * 3 + 2]])
+                        
+                        var red:Int = Int(redm[0][0] * 255)
+                        var green:Int = Int(greenm[0][0] * 255)
+                        var blue:Int = Int(bluem[0][0] * 255)
+                        //print(red, green, blue)
+                        if red < 0{
+                            red = 0
+                        }
+                        if red > 255{
+                            red = 255
+                            
+                        }
+                        if green < 0 {
+                            green = 0
+                            
+                        }
+                        if green > 255{
+                            green = 255
+                            
+                        }
+                        if blue < 0{
+                            blue = 0
+                        }
+                        if blue > 255{
+                            blue = 255
+                            
+                        }
+                        
+
+                        self.RenderingImgtoFile.pixels[l_index][x * imageWidth * 3 + y * 3] = UInt8(red)
+                        self.RenderingImgtoFile.pixels[l_index][x * imageWidth * 3 + y * 3 + 1] = UInt8(green)
+                        self.RenderingImgtoFile.pixels[l_index][x * imageWidth * 3 + y * 3 + 2] = UInt8(blue)
+                        
+                    }
+                }
+            }
+        }
+        
+        self.flagFinishRender = true
+    }
     
     func renderImage(){
         var rgba = RGBA(image: toProcessImage[0].photoImage)!
-        for y in 0..<imageHeight{
-            for x in 0..<imageWidth {
+        for x in 0..<imageHeight{
+            for y in 0..<imageWidth {
                 var l_u = LightXRender
                 var l_v = LightYRender
-                let index = y * rgba.width + x
+                let index = x * rgba.width + y
                 var pixel = rgba.pixels[index]
                 //todo!!!!!matrix
                 let light_matrix = Vector(arrayLiteral: l_u * l_u, l_v * l_v, l_u * l_v, l_u, l_v, 1)
                 let redm = matMul(mat1: transpose(inputMatrix: [light_matrix]), mat2: [vectorX[x * imageWidth * 3 + y * 3 + 0]])
                 let greenm = matMul(mat1: transpose(inputMatrix: [light_matrix]), mat2: [vectorX[x * imageWidth * 3 + y * 3 + 1]])
                 let bluem = matMul(mat1: transpose(inputMatrix: [light_matrix]), mat2: [vectorX[x * imageWidth * 3 + y * 3 + 2]])
-                //print("pixel", red[0][0] * 255.0, green[0][0] * 255.0, blue[0][0] * 255.0)
-                /*
-                pixel.red =   UInt8(l_u * l_u * vectorX[x * imageWidth * 3 + y * 3 + 0][0])
-                pixel.red = pixel.red + UInt8(l_v * l_v * vectorX[x * imageWidth * 3 + y * 3 + 0][1])
-                pixel.red = pixel.red + UInt8(l_u * l_v * vectorX[x * imageWidth * 3 + y * 3 + 0][2])
-                pixel.red = pixel.red + UInt8(l_u * vectorX[x * imageWidth * 3 + y * 3 + 0][3])
-                pixel.red = pixel.red + UInt8(l_v * vectorX[x * imageWidth * 3 + y * 3 + 0][4])
-                pixel.red = pixel.red + UInt8(vectorX[x * imageWidth * 3 + y * 3 + 0][6])
-                pixel.green = UInt8(l_u * l_u * vectorX[x * imageWidth * 3 + y * 3 + 1][0])
-                pixel.green = pixel.green + UInt8(l_v * l_v * vectorX[x * imageWidth * 3 + y * 3 + 1][1])
-                pixel.green = pixel.green + UInt8(l_u * l_v * vectorX[x * imageWidth * 3 + y * 3 + 1][2])
-                pixel.green = pixel.green + UInt8(l_u * vectorX[x * imageWidth * 3 + y * 3 + 1][3])
-                pixel.green = pixel.green + UInt8(l_v * vectorX[x * imageWidth * 3 + y * 3 + 1][4])
-                pixel.green = pixel.green + UInt8(vectorX[x * imageWidth * 3 + y * 3 + 1][6])
-                pixel.blue =  UInt8(l_u * l_u * vectorX[x * imageWidth * 3 + y * 3 + 2][0])
-                pixel.blue = pixel.blue + UInt8(l_v * l_v * vectorX[x * imageWidth * 3 + y * 3 + 2][1])
-                pixel.blue = pixel.blue + UInt8(l_u * l_v * vectorX[x * imageWidth * 3 + y * 3 + 2][2])
-                pixel.blue = pixel.blue + UInt8(l_u * vectorX[x * imageWidth * 3 + y * 3 + 2][3])
-                pixel.blue = pixel.blue + UInt8(l_v * vectorX[x * imageWidth * 3 + y * 3 + 2][4])
-                pixel.blue = pixel.blue + UInt8(vectorX[x * imageWidth * 3 + y * 3 + 2][6])
-                */
                 
                 var red:Int = Int(redm[0][0] * 255)
                 var green:Int = Int(greenm[0][0] * 255)
@@ -266,7 +338,7 @@ class ProcessingImage {
         
     }
     
-    //test
+    //utils
     func matMul(mat1:Matrix, mat2:Matrix) -> Matrix {
         if mat1.count != mat2[0].count {
             print("error")

@@ -87,7 +87,8 @@ class ImagesViewController: UIViewController  {
     }
     @IBAction func SliderLightX(_ sender: UISlider) {
         if (PImage != nil){
-            PImage.LightXRender = Double(sender.value)}
+            PImage.LightXRender = Double(sender.value)
+        }
         SliderLightXText.text = String(sender.value)
     }
     @IBAction func SliderLightY(_ sender: UISlider) {
@@ -101,6 +102,10 @@ class ImagesViewController: UIViewController  {
         PImage.renderImage()
         self.imagePreview.image = PImage.toProcessImage[0].photoImage
         
+    }
+    @IBAction func imageRenderFull(_ sender: Any) {
+        PImage.renderImageFUll()
+
     }
     @IBAction func previousImage(_ sender: Any) {
         if !PhotoArray.isEmpty {
@@ -216,10 +221,17 @@ class ImagesViewController: UIViewController  {
             ViewPositionY.text = location.y.description
             ViewPositionX.text = location.x.description
             
-            if !PhotoArray.isEmpty {
+            if (PImage != nil && PImage.flagFinishRender == true) {
+                PImage.renderImageResult(l_u_raw: Double(location.x) - Double(circlePostionX), l_v_raw: Double(location.y) - Double(circlePostionY))
+                self.imagePreview.image = PImage.toProcessImage[0].photoImage
+                
+            }
+            else if !PhotoArray.isEmpty {
                 PhotoArray[PhotoPreviewIndex].lightPositionX = location.x - CGFloat(circlePostionX)
                 PhotoArray[PhotoPreviewIndex].lightPositionY = location.y - CGFloat(circlePostionY)
             }
+            
+
         }
         
     }
