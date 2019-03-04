@@ -19,7 +19,7 @@ extension UIImage {
         let pixelData = self.cgImage!.dataProvider!.data
         let data: UnsafePointer<UInt8> = CFDataGetBytePtr(pixelData)
         
-        let pixelInfo: Int = ((Int(self.size.width) * Int(pos.y)) + Int(pos.x)) * 4
+        let pixelInfo: Int = ((Int(self.size.width) * Int(pos.x)) + Int(pos.y)) * 4
         
         let r = CGFloat(data[pixelInfo]) / CGFloat(255.0)
         let g = CGFloat(data[pixelInfo+1]) / CGFloat(255.0)
@@ -56,6 +56,41 @@ class RenderImgtoFile {
     init(imageWidth : Int, imageHeight : Int, light_count : Int) {
         let pixels_tmp = [UInt8](repeating: 0, count: imageWidth*imageHeight*3)
         self.pixels = [[UInt8]](repeating: pixels_tmp, count: light_count)
+    }
+    func store(fileName : String) {
+        /*
+        let fileUrl = NSURL(fileURLWithPath: fileName + ".rti") // Your path here
+
+        // Save to file
+        (self.pixels as NSArray).write(to: fileUrl as URL, atomically: true)
+        print("rti file saved!")
+         */
+        if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+            let url = dir.appendingPathComponent(fileName + ".rti")
+            do {
+                let data = try PropertyListSerialization.data(fromPropertyList: self.pixels, format: .binary, options: 0)
+                try data.write(to: url, options: .atomic)
+            }
+            catch { print(error) }
+        }
+    
+    }
+    func read(fileName : String) {
+        /*
+        let fileUrl = NSURL(fileURLWithPath: fileName + ".rti") // Your path here
+        print("reading rti file...")
+        // Read from file
+        _ = NSArray(contentsOf: fileUrl as URL) as! [[String]]
+        */
+        if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+            let url = dir.appendingPathComponent(fileName + ".rti")
+            do {
+                let data = try PropertyListSerialization.data(fromPropertyList: self.pixels, format: .binary, options: 0)
+                try data.write(to: url, options: .atomic)
+            }
+            catch { print(error) }
+        }
+        
     }
 }
 

@@ -107,6 +107,25 @@ class ImagesViewController: UIViewController  {
         PImage.renderImageFUll()
 
     }
+    @IBOutlet weak var imageRenderFilename: UITextField!
+    @IBAction func imageRenderStore(_ sender: Any) {
+        let text: String = imageRenderFilename.text!
+        print(text)
+        if PImage != nil {
+            PImage.RenderingImgtoFile.store(fileName: text)
+        }
+    }
+    @IBAction func imageRenderRead(_ sender: Any) {
+        let text: String = imageRenderFilename.text!
+        if PImage != nil {
+            PImage.RenderingImgtoFile.read(fileName: text)
+        }
+        else {
+            PImage = ProcessingImage(toProcessImage: PhotoArray, imageNum : PhotoArray.count, imageWidth : Int(PhotoArray[0].photoImage.size.width), imageHeight : Int(PhotoArray[0].photoImage.size.height))
+            PImage.RenderingImgtoFile.read(fileName: text)
+        }
+        PImage.flagFinishRender = true
+    }
     @IBAction func previousImage(_ sender: Any) {
         if !PhotoArray.isEmpty {
             if PhotoPreviewIndex > 0 {
@@ -205,6 +224,9 @@ class ImagesViewController: UIViewController  {
     
     //Touch
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        //keyboard
+        self.view.endEditing(true)
+        
         let touch = touches.first
         
         location = touch!.location(in: self.view)

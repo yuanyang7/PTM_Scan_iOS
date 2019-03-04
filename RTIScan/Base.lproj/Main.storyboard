@@ -220,6 +220,17 @@
                                 <rect key="frame" x="284" y="568" width="35" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="store"/>
+                                <connections>
+                                    <action selector="imageRenderStore:" destination="wuH-af-Chn" eventType="touchUpInside" id="aF6-wn-zss"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="k8Z-Mm-58t">
+                                <rect key="frame" x="344" y="568" width="31" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="read"/>
+                                <connections>
+                                    <action selector="imageRenderRead:" destination="wuH-af-Chn" eventType="touchUpInside" id="XjJ-2R-lSI"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -232,6 +243,7 @@
                         <outlet property="ViewPositionX" destination="mrI-EG-kGt" id="kdj-C8-pu2"/>
                         <outlet property="ViewPositionY" destination="DvV-hK-XCc" id="P6F-lL-5N0"/>
                         <outlet property="imagePreview" destination="oHN-br-lFc" id="qrB-EV-VUo"/>
+                        <outlet property="imageRenderFilename" destination="7gf-SC-bbr" id="4Ln-0C-udi"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="T7I-VB-TRo" userLabel="First Responder" sceneMemberID="firstResponder"/>
