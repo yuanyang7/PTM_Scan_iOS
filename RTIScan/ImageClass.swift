@@ -85,8 +85,9 @@ class RenderImgtoFile {
         if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
             let url = dir.appendingPathComponent(fileName + ".rti")
             do {
-                let data = try PropertyListSerialization.data(fromPropertyList: self.pixels, format: .binary, options: 0)
-                try data.write(to: url, options: .atomic)
+                let data = try Data(contentsOf: url)
+                self.pixels = try PropertyListSerialization.propertyList(from: data, format: nil) as! [[UInt8]]
+
             }
             catch { print(error) }
         }
@@ -113,8 +114,8 @@ class ProcessingImage {
     
     var RenderingImgtoFile : RenderImgtoFile
     var flagFinishRender : Bool = false
-    var renderingBufferCount : Int = 4
-    var renderingBufferStep : Double = 0.5
+    var renderingBufferCount : Int = 5
+    var renderingBufferStep : Double = 0.4
     
 
     

@@ -83,7 +83,7 @@ class ImagesViewController: UIViewController  {
         drawSelectedCircle()
     }
     @IBAction func SelectCircle(_ sender: Any) {
-        
+
     }
     @IBAction func SliderLightX(_ sender: UISlider) {
         if (PImage != nil){
@@ -105,7 +105,13 @@ class ImagesViewController: UIViewController  {
     }
     @IBAction func imageRenderFull(_ sender: Any) {
         PImage.renderImageFUll()
-
+        
+        //Alert box
+        let alert = UIAlertController(title: "Done!", message: "Complete rendering all the results!", preferredStyle: UIAlertController.Style.alert)
+        // add an action (button)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+        // show the alert
+        self.present(alert, animated: true, completion: nil)
     }
     @IBOutlet weak var imageRenderFilename: UITextField!
     @IBAction func imageRenderStore(_ sender: Any) {
@@ -114,6 +120,14 @@ class ImagesViewController: UIViewController  {
         if PImage != nil {
             PImage.RenderingImgtoFile.store(fileName: text)
         }
+        
+        //Alert box
+        let alert = UIAlertController(title: "Saved!", message: "PTM file saved!", preferredStyle: UIAlertController.Style.alert)
+        // add an action (button)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+        // show the alert
+        self.present(alert, animated: true, completion: nil)
+        
     }
     @IBAction func imageRenderRead(_ sender: Any) {
         let text: String = imageRenderFilename.text!
@@ -125,6 +139,13 @@ class ImagesViewController: UIViewController  {
             PImage.RenderingImgtoFile.read(fileName: text)
         }
         PImage.flagFinishRender = true
+        
+        //Alert box
+        let alert = UIAlertController(title: "Done!", message: "Successfully importing PTM file!", preferredStyle: UIAlertController.Style.alert)
+        // add an action (button)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+        // show the alert
+        self.present(alert, animated: true, completion: nil)
     }
     @IBAction func previousImage(_ sender: Any) {
         if !PhotoArray.isEmpty {
