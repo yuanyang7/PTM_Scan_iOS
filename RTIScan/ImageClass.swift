@@ -117,6 +117,11 @@ class ProcessingImage {
     var renderingBufferCount : Int = 5
     var renderingBufferStep : Double = 0.4
     
+    var unscaledColor : [Double]
+    
+    var bias : [Double]
+    var scale : [Double]
+    
 
     
     
@@ -135,7 +140,12 @@ class ProcessingImage {
 
         self.vectorY = [Vector](repeating: temp, count: imageWidth*imageHeight*3)
         
+        self.unscaledColor = [Double](repeating: 0.0, count: imageWidth*imageHeight*3)
+        
         self.RenderingImgtoFile = RenderImgtoFile(imageWidth : self.imageWidth, imageHeight : self.imageHeight, light_count : self.renderingBufferCount * self.renderingBufferCount)
+        
+        self.scale = [0.5, 0.5, 0.5, 0.5, 0.5, 0.5]
+        self.bias = [0.5, 0.5, 0.5, 0.5, 0.5, 0.5]
 
         //self.vectorY_G = [Vector](repeating: temp, count: imageWidth*imageHeight*imageNum)
         //self.vectorY_B = [Vector](repeating: temp, count: imageWidth*imageHeight*imageNum)
@@ -170,8 +180,10 @@ class ProcessingImage {
                 let index = x * rgba.width + y
                 var pixel = rgba.pixels[index]
                 pixel.red = self.RenderingImgtoFile.pixels[Int(l_u) * self.renderingBufferCount + Int(l_v)][x * imageWidth * 3 + y * 3]
-                pixel.green = pixel.red
-                pixel.blue = pixel.red
+                pixel.green = self.RenderingImgtoFile.pixels[Int(l_u) * self.renderingBufferCount + Int(l_v)][x * imageWidth * 3 + y * 3 + 1]
+                pixel.blue = self.RenderingImgtoFile.pixels[Int(l_u) * self.renderingBufferCount + Int(l_v)][x * imageWidth * 3 + y * 3 + 2]
+                //pixel.green = self.RenderingImgtoFile.pixels[Int(l_u) * self.renderingBufferCount + Int(l_v)][x * imageWidth * 3 + y * 3 + 1]
+                //pixel.blue = self.RenderingImgtoFile.pixels[Int(l_u) * self.renderingBufferCount + Int(l_v)][x * imageWidth * 3 + y * 3 + 2]
                 rgba.pixels[index] = pixel
             }
         }
@@ -193,7 +205,24 @@ class ProcessingImage {
                         //let greenm = matMul(mat1: transpose(inputMatrix: [light_matrix]), mat2: [vectorX[x * imageWidth * 3 + y * 3 + 1]])
                         //let bluem = matMul(mat1: transpose(inputMatrix: [light_matrix]), mat2: [vectorX[x * imageWidth * 3 + y * 3 + 2]])
                         
-                        var red:Int = Int(redm[0][0] * 255)
+                        //var lu: Double = Double(redm[0][0] * 255)
+                        
+                        //ycc to rgb todo scale bias
+                        //print("co", vectorX[x * imageWidth * 3 + y * 3 + 0])
+                        //print("light, ", redm[0][0] * 255)
+                        var redd:Double =  Double( vectorY[x * imageWidth * 3 + y * 3 + 2][0] / 0.6350 + redm[0][0] )
+                        var blued:Double = Double( vectorY[x * imageWidth * 3 + y * 3 + 1][0] / 0.5389 + redm[0][0] )
+                        var greend:Double = redm[0][0] - 0.2126*redd + 0.0722*blued
+                        var red:Int = Int(redd * 255)
+                        var green:Int = Int(greend * 255)
+                        var blue:Int = Int(blued * 255)
+                        //print("rgb", red, green, blue)
+                        
+                        """
+                        var red:Int = Int(lu * self.unscaledColor[x * imageWidth * 3 + y * 3])
+                        var green:Int = Int(lu * self.unscaledColor[x * imageWidth * 3 + y * 3 + 1])
+                        var blue:Int = Int(lu * self.unscaledColor[x * imageWidth * 3 + y * 3 + 2])
+                        """
                         //var green:Int = Int(greenm[0][0] * 255)
                         //var blue:Int = Int(bluem[0][0] * 255)
                         //print(red, green, blue)
@@ -204,7 +233,7 @@ class ProcessingImage {
                             red = 255
                             
                         }
-                        /*
+                        
                         if green < 0 {
                             green = 0
                             
@@ -220,12 +249,12 @@ class ProcessingImage {
                             blue = 255
                             
                         }
-                         */
+                        
                         
 
                         self.RenderingImgtoFile.pixels[l_index][x * imageWidth * 3 + y * 3] = UInt8(red)
-                        //self.RenderingImgtoFile.pixels[l_index][x * imageWidth * 3 + y * 3 + 1] = UInt8(green)
-                        //self.RenderingImgtoFile.pixels[l_index][x * imageWidth * 3 + y * 3 + 2] = UInt8(blue)
+                        self.RenderingImgtoFile.pixels[l_index][x * imageWidth * 3 + y * 3 + 1] = UInt8(green)
+                        self.RenderingImgtoFile.pixels[l_index][x * imageWidth * 3 + y * 3 + 2] = UInt8(blue)
                         
                     }
                 }
@@ -247,7 +276,11 @@ class ProcessingImage {
                 let light_matrix = Vector(arrayLiteral: l_u * l_u, l_v * l_v, l_u * l_v, l_u, l_v, 1)
                 let lum = matMul(mat1: transpose(inputMatrix: [light_matrix]), mat2: [vectorX[x * imageWidth * 3 + y * 3 + 0]])
                 
-                var lu:Int = Int(lum[0][0] * 255)
+                var lu: Double = Double(lum[0][0] * 255)
+                var red:Int = Int(lu * self.unscaledColor[x * imageWidth * 3 + y * 3])
+                var green:Int = Int(lu * self.unscaledColor[x * imageWidth * 3 + y * 3 + 1])
+                var blue:Int = Int(lu * self.unscaledColor[x * imageWidth * 3 + y * 3 + 2])
+                /*
                 if lu < 0{
                     lu = 0
                 }
@@ -255,11 +288,35 @@ class ProcessingImage {
                     lu = 255
                     
                 }
+                 */
+                if red < 0 {
+                    red = 0
+                    
+                }
+                if red > 255{
+                    red = 255
+                    
+                }
+                if green < 0 {
+                    green = 0
+                    
+                }
+                if green > 255{
+                    green = 255
+                    
+                }
+                if blue < 0{
+                    blue = 0
+                }
+                if blue > 255{
+                    blue = 255
+                    
+                }
                 //print(red)
                 //print("1, ",pixel, pixel.red )
-                pixel.red = UInt8(lu)
-                pixel.green = UInt8(lu)
-                pixel.blue = UInt8(lu)
+                pixel.red = UInt8(red)
+                pixel.green = UInt8(green)
+                pixel.blue = UInt8(blue)
                 //print("red", red, pixel.red)
                 
                 
@@ -312,13 +369,36 @@ class ProcessingImage {
                     let pixelValue = toProcessImage[index].photoImage.getPixelColor(pos: CGPoint(x: x, y: y))
                     pixelValue.getRed(&redval, green: &greenval, blue: &blueval, alpha: &alphaval)
                     //luminance (0.2126*R + 0.7152*G + 0.0722*B
+                    //to ycc
                     vectorY[x * imageWidth * 3 + y * 3][index] = Double(redval) * 0.2126 + Double(greenval) * 0.7152 + Double(blueval) * 0.0722
+                    vectorY[x * imageWidth * 3 + y * 3 + 1][index] = 0.5389 * (Double(blueval) - vectorY[x * imageWidth * 3 + y * 3][index])
+                    vectorY[x * imageWidth * 3 + y * 3 + 2][index] = 0.6350 * (Double(redval) - vectorY[x * imageWidth * 3 + y * 3][index])
+                    //print("ycc, ", vectorY[x * imageWidth * 3 + y * 3][index], vectorY[x * imageWidth * 3 + y * 3 + 1][index], vectorY[x * imageWidth * 3 + y * 3 + 2][index])
                     //rgb
                     //vectorY[x * imageWidth * 3 + y * 3][index] = Double(redval)
                     //vectorY[x * imageWidth * 3 + y * 3 + 1][index] = Double(greenval)
                     //vectorY[x * imageWidth * 3 + y * 3 + 2][index] = Double(blueval)
                 }
             }
+            """
+            //unscale color
+            for x in 0..<imageHeight {
+                for y in 0..<imageWidth {
+                    var redval: CGFloat = 0
+                    var greenval: CGFloat = 0
+                    var blueval: CGFloat = 0
+                    var alphaval: CGFloat = 0
+                    let pixelValue = toProcessImage[index].photoImage.getPixelColor(pos: CGPoint(x: x, y: y))
+                    pixelValue.getRed(&redval, green: &greenval, blue: &blueval, alpha: &alphaval)
+                    
+                    self.unscaledColor[x * imageWidth * 3 + y * 3] = Double(redval) / vectorY[x * imageWidth * 3 + y * 3][0] //todo improve add all
+                    self.unscaledColor[x * imageWidth * 3 + y * 3 + 1] = Double(greenval) / vectorY[x * imageWidth * 3 + y * 3][0]
+                    self.unscaledColor[x * imageWidth * 3 + y * 3 + 2] = Double(blueval) / vectorY[x * imageWidth * 3 + y * 3][0]
+
+                }
+            }
+            """
+            
         }
         
         print("matrix calculation done.")
@@ -345,7 +425,9 @@ class ProcessingImage {
                     B = matMul(mat1: transpose(inputMatrix: u), mat2: [vectorY[tempIndex]])
                     //print("B", B)
                      for index in 0..<6 {
-                        vectorX[tempIndex][index] = B[0][index] / s[index][index]
+                        vectorX[tempIndex][index] = (B[0][index] / s[index][index] + self.bias[index]) * self.scale[index]
+                        //todo scale bias
+                        
                         }
                     //print(vectorX[tempIndex], matrixA[0])
                     

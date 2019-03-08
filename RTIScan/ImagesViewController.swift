@@ -159,8 +159,8 @@ class ImagesViewController: UIViewController  {
             
             
             //crop image
-            UIGraphicsBeginImageContextWithOptions(CGSize(width: CGFloat(SliderCircleRVar * 2), height: CGFloat(SliderCircleRVar * 2)), true, CGFloat(1.0))
-            PhotoArray[PhotoPreviewIndex].photoImage.draw(at: CGPoint(x: -SliderCircleXVar, y: -SliderCircleYVar + 218))
+            UIGraphicsBeginImageContextWithOptions(CGSize(width: CGFloat(SliderCircleRVar * 2 * 3), height: CGFloat(SliderCircleRVar * 2 * 3)), true, CGFloat(1.0))
+            PhotoArray[PhotoPreviewIndex].photoImage.draw(at: CGPoint(x: -SliderCircleXVar * 3, y: (-SliderCircleYVar + 218) * 3))
             let croppedImage = UIGraphicsGetImageFromCurrentImageContext()
             print(croppedImage?.size)
             UIGraphicsEndImageContext()
@@ -196,8 +196,9 @@ class ImagesViewController: UIViewController  {
             self.imagePreview.image = PhotoArray[PhotoPreviewIndex].photoImage
             
             //crop image
-            UIGraphicsBeginImageContextWithOptions(CGSize(width: CGFloat(SliderCircleRVar * 2), height: CGFloat(SliderCircleRVar * 2)), true, CGFloat(1.0))
-            PhotoArray[PhotoPreviewIndex].photoImage.draw(at: CGPoint(x: -SliderCircleXVar, y: -SliderCircleYVar + 218))
+            //todo add scale here
+            UIGraphicsBeginImageContextWithOptions(CGSize(width: CGFloat(SliderCircleRVar * 2 * 3), height: CGFloat(SliderCircleRVar * 2 * 3)), true, CGFloat(1.0))
+            PhotoArray[PhotoPreviewIndex].photoImage.draw(at: CGPoint(x: -SliderCircleXVar * 3, y: (-SliderCircleYVar + 218) * 3))
             let croppedImage = UIGraphicsGetImageFromCurrentImageContext()
             print(croppedImage?.size)
             UIGraphicsEndImageContext()
@@ -299,15 +300,23 @@ class ImagesViewController: UIViewController  {
                 option.isSynchronous = true
                 
                 
-                manager.requestImage(for: SelectedAssets[i], targetSize: CGSize(width: 200, height: 200), contentMode: .aspectFill, options: option, resultHandler: {(result, info)->Void in
+                manager.requestImage(for: SelectedAssets[i], targetSize: CGSize(width: 256 * 3, height: 342 * 3), contentMode: .aspectFill, options: option, resultHandler: {(result, info)->Void in
                     thumbnail = result!
                     
                 })
+                """
+                manager.requestImage(for: SelectedAssets[i], targetSize: PHImageManagerMaximumSize, contentMode: .aspectFill, options: option, resultHandler: {(result, info)->Void in
+                    thumbnail = result!
+                    
+                })
+                """
                 let data = thumbnail.jpegData(compressionQuality: 0.7)
                 //let newImage = UIImage(data: data!)
                 
                 let photoArrayTemp = RTIImage(photoImage: UIImage(data: data!)!)
                 self.PhotoArray.append(photoArrayTemp as RTIImage)
+                //todo scale
+                print(photoArrayTemp.photoImage.size)
                 
             }
             /*
