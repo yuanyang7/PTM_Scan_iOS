@@ -288,7 +288,6 @@ class ImagesViewController: UIViewController  {
                     coefficients_buffer[7][x][y] = Float32(self.PImage.vectorX[x * self.PImage.imageWidth * 3 + y * 3 + 2][0])
                 }
             }
-            print (coefficients_buffer[7])
             destView.coefficients_buffer = coefficients_buffer
         }
     }

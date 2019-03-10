@@ -393,6 +393,7 @@ class ProcessingImage {
                     vectorY[x * imageWidth * 3 + y * 3][index] = Double(redval) * 0.2126 + Double(greenval) * 0.7152 + Double(blueval) * 0.0722
                     vectorY[x * imageWidth * 3 + y * 3 + 1][index] = 0.5389 * (Double(blueval) - vectorY[x * imageWidth * 3 + y * 3][index])
                     vectorY[x * imageWidth * 3 + y * 3 + 2][index] = 0.6350 * (Double(redval) - vectorY[x * imageWidth * 3 + y * 3][index])
+
                     //cbcr
                     if index == 0 {
                             vectorX[x * imageWidth * 3 + y * 3 + 1][0] = vectorY[x * imageWidth * 3 + y * 3 + 1][0]
@@ -444,7 +445,7 @@ class ProcessingImage {
         print("calculate coefficients...")
         for x in 0..<imageHeight {
             for y in 0..<imageWidth {
-                for c in 0...2 {
+                for c in 0...0 {
                     var B : Matrix
                     let tempIndex = x * imageWidth * 3 + y * 3 + c
                     B = matMul(mat1: transpose(inputMatrix: u), mat2: [vectorY[tempIndex]])

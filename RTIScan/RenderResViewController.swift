@@ -196,12 +196,12 @@ class RenderResViewController: UIViewController {
         
         location = touch!.location(in: self.view)
         //375 x 667
-        var x = location.x - 375 / 2.0
-        var y = location.y - 667 / 2.0
+        var x = Float((location.x - 375 / 2.0) / 100)
+        var y = Float((location.y - 667 / 2.0) / 100)
         
-        if(x > -100 && x < 100 && y > -100 && y < 100){
-            lightPos.x = Float(x / 100)
-            lightPos.y = Float(y / 100)
+        if(x > -1 && x < 1 && y > -1 && y < 1 && (x * x + y * y <= 1)){
+            lightPos.x = x
+            lightPos.y = x
         }
     }
     

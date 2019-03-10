@@ -64,7 +64,7 @@ fragment float4 displayTexture(TextureMappingVertex mappingVertex [[ stage_in ]]
     float r = cr / 0.6350 + luminance;
     float b = cb / 0.5389 + luminance;
     float g = luminance - 0.2126 * r + 0.0722 * b;
-    return float4(g, r, b, 1);
+    return float4(r, g, b, 1);
 }
 
 /*
