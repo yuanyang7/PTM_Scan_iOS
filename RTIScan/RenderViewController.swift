@@ -167,6 +167,7 @@ class RenderViewController: GLKViewController {
 extension RenderViewController: GLKViewControllerDelegate {
     
     func glkViewControllerUpdate(_ controller: GLKViewController) {
+        """
         // 1
         let aspect = fabsf(Float(view.bounds.size.width) / Float(view.bounds.size.height))
         // 2
@@ -181,6 +182,7 @@ extension RenderViewController: GLKViewControllerDelegate {
         modelViewMatrix = GLKMatrix4Rotate(modelViewMatrix, GLKMathDegreesToRadians(rotation), 0, 0, 1)
         // 3
         effect.transform.modelviewMatrix = modelViewMatrix
+        """
     }
 }
 

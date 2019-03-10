@@ -242,7 +242,18 @@ class ImagesViewController: UIViewController  {
         print("Back!")
         self.dismiss(animated: true, completion: nil)
     }
-    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        if segue.identifier == "RenderResSegue"{
+            
+            let destView = segue.destination as! RenderResViewController
+            destView.textureImg = self.PhotoArray[0].photoImage
+            
+        }
+    }
+    @IBAction func RenderView(_ sender: Any) {
+        self.performSegue(withIdentifier: "RenderResSegue", sender: self)
+    }
     
     //Touch
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
