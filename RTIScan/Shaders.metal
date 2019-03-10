@@ -32,10 +32,13 @@ vertex TextureMappingVertex mapTexture(unsigned int vertex_id [[ vertex_id ]]) {
 }
 
 fragment half4 displayTexture(TextureMappingVertex mappingVertex [[ stage_in ]],
-                              texture2d<float, access::sample> texture [[ texture(0) ]]) {
+                              texture2d<float, access::sample> texture [[ texture(0) ]],
+                              texture2d<float, access::sample> texture2 [[ texture(1) ]]) {
     constexpr sampler s(address::clamp_to_edge, filter::linear);
+    half4 base = half4(texture.sample(s, mappingVertex.textureCoordinate));
+    half4 overlay = half4(texture2.sample(s, mappingVertex.textureCoordinate));
     
-    return half4(texture.sample(s, mappingVertex.textureCoordinate));
+    return max(base, overlay);
 }
 
 /*

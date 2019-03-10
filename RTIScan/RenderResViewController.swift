@@ -13,7 +13,7 @@ import MetalKit
 class RenderResViewController: UIViewController {
     
     var textureImg: UIImage!
-    
+    var textureImg2: UIImage!
     var device: MTLDevice!
     
     var metalLayer: CAMetalLayer!
@@ -123,12 +123,13 @@ class RenderResViewController: UIViewController {
         /// Metal texture to be drawn whenever the view controller is asked to render its view.
         let textureLoader = MTKTextureLoader(device: device)
         var texture: MTLTexture = try! textureLoader.newTexture(cgImage: textureImg.cgImage!)
-        
+        var texture2: MTLTexture = try! textureLoader.newTexture(cgImage: textureImg2.cgImage!)
         let renderEncoder = commandBuffer
             .makeRenderCommandEncoder(descriptor: renderPassDescriptor)!
         renderEncoder.setRenderPipelineState(pipelineState)
         //renderEncoder.setVertexBuffer(vertexBuffer, offset: 0, index: 0)
         renderEncoder.setFragmentTexture(texture, index: 0)
+        renderEncoder.setFragmentTexture(texture2, index: 1)
         renderEncoder
             .drawPrimitives(type: .triangleStrip, vertexStart: 0, vertexCount: 4, instanceCount: 1)
         renderEncoder.endEncoding()

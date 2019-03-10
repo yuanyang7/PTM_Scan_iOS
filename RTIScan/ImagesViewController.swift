@@ -248,6 +248,7 @@ class ImagesViewController: UIViewController  {
             
             let destView = segue.destination as! RenderResViewController
             destView.textureImg = self.PhotoArray[0].photoImage
+            destView.textureImg2 = self.PhotoArray[1].photoImage
             
         }
     }
