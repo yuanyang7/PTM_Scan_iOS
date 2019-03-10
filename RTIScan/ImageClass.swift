@@ -51,11 +51,15 @@ class RTIImage {
 
 //store
 class RenderImgtoFile {
-    var pixels : [[UInt8]]
-    
+    var pixels : [[Double]]
+    /*
     init(imageWidth : Int, imageHeight : Int, light_count : Int) {
         let pixels_tmp = [UInt8](repeating: 0, count: imageWidth*imageHeight*3)
         self.pixels = [[UInt8]](repeating: pixels_tmp, count: light_count)
+    }
+     */
+    init(imageWidth : Int, imageHeight : Int) {
+        self.pixels = [[Double]](repeating: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0], count: imageWidth*imageHeight*3)
     }
     func store(fileName : String) {
         /*
@@ -85,9 +89,20 @@ class RenderImgtoFile {
         if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
             let url = dir.appendingPathComponent(fileName + ".rti")
             do {
-                let data = try Data(contentsOf: url)
-                self.pixels = try PropertyListSerialization.propertyList(from: data, format: nil) as! [[UInt8]]
-
+                let data = try Data(contentsOf: url) 
+                self.pixels = try PropertyListSerialization.propertyList(from: data, format: nil) as! [[Double]]
+                /*
+                for (index, section) in sections.enumerated() {
+                    print("section ", index)
+                    /*
+                    if index == 0{
+                        self.pixels = section
+                    }
+                    else{
+                        self.crcy = section
+                    }
+                    */
+                }*/
             }
             catch { print(error) }
         }
@@ -141,8 +156,11 @@ class ProcessingImage {
         self.vectorY = [Vector](repeating: temp, count: imageWidth*imageHeight*3)
         
         self.unscaledColor = [Double](repeating: 0.0, count: imageWidth*imageHeight*3)
-        
+        /*
         self.RenderingImgtoFile = RenderImgtoFile(imageWidth : self.imageWidth, imageHeight : self.imageHeight, light_count : self.renderingBufferCount * self.renderingBufferCount)
+        */
+        //verctorX
+        self.RenderingImgtoFile = RenderImgtoFile(imageWidth : self.imageWidth, imageHeight : self.imageHeight)
         
         self.scale = [0.5, 0.5, 0.5, 0.5, 0.5, 0.5]
         self.bias = [0.5, 0.5, 0.5, 0.5, 0.5, 0.5]
@@ -168,6 +186,7 @@ class ProcessingImage {
         }
     }
     func renderImageResult(l_u_raw : Double, l_v_raw : Double) {
+        /*
         var l_u = l_u_raw / 50 + 1
         var l_v = l_v_raw / 50 + 1
         l_u /= self.renderingBufferStep
@@ -189,6 +208,7 @@ class ProcessingImage {
         }
         
         toProcessImage[0].photoImage = rgba.toUIImage()!
+         */
         
     }
     func renderImageFUll() {
@@ -251,11 +271,11 @@ class ProcessingImage {
                         }
                         
                         
-
+                        /*
                         self.RenderingImgtoFile.pixels[l_index][x * imageWidth * 3 + y * 3] = UInt8(red)
                         self.RenderingImgtoFile.pixels[l_index][x * imageWidth * 3 + y * 3 + 1] = UInt8(green)
                         self.RenderingImgtoFile.pixels[l_index][x * imageWidth * 3 + y * 3 + 2] = UInt8(blue)
-                        
+                        */
                     }
                 }
             }
@@ -373,6 +393,11 @@ class ProcessingImage {
                     vectorY[x * imageWidth * 3 + y * 3][index] = Double(redval) * 0.2126 + Double(greenval) * 0.7152 + Double(blueval) * 0.0722
                     vectorY[x * imageWidth * 3 + y * 3 + 1][index] = 0.5389 * (Double(blueval) - vectorY[x * imageWidth * 3 + y * 3][index])
                     vectorY[x * imageWidth * 3 + y * 3 + 2][index] = 0.6350 * (Double(redval) - vectorY[x * imageWidth * 3 + y * 3][index])
+                    //cbcr
+                    if index == 0 {
+                            vectorX[x * imageWidth * 3 + y * 3 + 1][0] = vectorY[x * imageWidth * 3 + y * 3 + 1][0]
+                            vectorX[x * imageWidth * 3 + y * 3 + 2][0] = vectorY[x * imageWidth * 3 + y * 3 + 2][0]
+                    }
                     //print("ycc, ", vectorY[x * imageWidth * 3 + y * 3][index], vectorY[x * imageWidth * 3 + y * 3 + 1][index], vectorY[x * imageWidth * 3 + y * 3 + 2][index])
                     //rgb
                     //vectorY[x * imageWidth * 3 + y * 3][index] = Double(redval)
@@ -380,7 +405,7 @@ class ProcessingImage {
                     //vectorY[x * imageWidth * 3 + y * 3 + 2][index] = Double(blueval)
                 }
             }
-            """
+            /*
             //unscale color
             for x in 0..<imageHeight {
                 for y in 0..<imageWidth {
@@ -397,7 +422,7 @@ class ProcessingImage {
 
                 }
             }
-            """
+            */
             
         }
         
@@ -434,6 +459,8 @@ class ProcessingImage {
                 }
             }
         }
+        self.RenderingImgtoFile.pixels = vectorX
+
         print("matrix calculation completed")
  
  

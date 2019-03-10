@@ -44,6 +44,7 @@ class ImagesViewController: UIViewController  {
     var SliderCircleXVar = 0
     var SliderCircleYVar = 0
     var SliderCircleRVar = 25
+    var lightPos : float2 = [0.0, 0.0]
     
     
     //UI
@@ -114,6 +115,22 @@ class ImagesViewController: UIViewController  {
         self.present(alert, animated: true, completion: nil)
     }
     @IBOutlet weak var imageRenderFilename: UITextField!
+    @IBAction func imageRenderStore(_ sender: Any) { //VertexX
+        let text: String = imageRenderFilename.text!
+        print(text)
+        if PImage != nil {
+            PImage.RenderingImgtoFile.store(fileName: text)
+        }
+        
+        //Alert box
+        let alert = UIAlertController(title: "Saved!", message: "PTM file saved!", preferredStyle: UIAlertController.Style.alert)
+        // add an action (button)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+        // show the alert
+        self.present(alert, animated: true, completion: nil)
+        
+    }
+    /*
     @IBAction func imageRenderStore(_ sender: Any) {
         let text: String = imageRenderFilename.text!
         print(text)
@@ -129,6 +146,7 @@ class ImagesViewController: UIViewController  {
         self.present(alert, animated: true, completion: nil)
         
     }
+    */
     @IBAction func imageRenderRead(_ sender: Any) {
         let text: String = imageRenderFilename.text!
         if PImage != nil {
@@ -138,6 +156,7 @@ class ImagesViewController: UIViewController  {
             PImage = ProcessingImage(toProcessImage: PhotoArray, imageNum : PhotoArray.count, imageWidth : Int(PhotoArray[0].photoImage.size.width), imageHeight : Int(PhotoArray[0].photoImage.size.height))
             PImage.RenderingImgtoFile.read(fileName: text)
         }
+        PImage.vectorX = PImage.RenderingImgtoFile.pixels
         PImage.flagFinishRender = true
         
         //Alert box
@@ -159,8 +178,13 @@ class ImagesViewController: UIViewController  {
             
             
             //crop image
+            """
             UIGraphicsBeginImageContextWithOptions(CGSize(width: CGFloat(SliderCircleRVar * 2 * 3), height: CGFloat(SliderCircleRVar * 2 * 3)), true, CGFloat(1.0))
             PhotoArray[PhotoPreviewIndex].photoImage.draw(at: CGPoint(x: -SliderCircleXVar * 3, y: (-SliderCircleYVar + 218) * 3))
+            """
+            //todo *3
+            UIGraphicsBeginImageContextWithOptions(CGSize(width: CGFloat(SliderCircleRVar * 2), height: CGFloat(SliderCircleRVar * 2)), true, CGFloat(1.0))
+            PhotoArray[PhotoPreviewIndex].photoImage.draw(at: CGPoint(x: -SliderCircleXVar, y: (-SliderCircleYVar + 218)))
             let croppedImage = UIGraphicsGetImageFromCurrentImageContext()
             print(croppedImage?.size)
             UIGraphicsEndImageContext()
@@ -249,7 +273,23 @@ class ImagesViewController: UIViewController  {
             let destView = segue.destination as! RenderResViewController
             destView.textureImg = self.PhotoArray[0].photoImage
             destView.textureImg2 = self.PhotoArray[1].photoImage
+            destView.PImage = self.PImage
+            var coefficients_buffer : [[[Float32]]]
+            let coefficients_buffer_tmp1 = [Float32](repeating: 0.0, count: self.PImage.imageWidth)
+            let coefficients_buffer_tmp2 = [[Float32]](repeating: coefficients_buffer_tmp1, count: self.PImage.imageHeight)
+            coefficients_buffer = [[[Float32]]](repeating: coefficients_buffer_tmp2, count: 8)  // 0~6 coefficients, 7,8: crcb
             
+            for x in 0..<self.PImage.imageHeight {
+                for y in 0..<self.PImage.imageWidth {
+                    for i in 0...5 {
+                        coefficients_buffer[i][x][y] = Float32(self.PImage.vectorX[x * self.PImage.imageWidth * 3 + y * 3][i])
+                    }
+                    coefficients_buffer[6][x][y] = Float32(self.PImage.vectorX[x * self.PImage.imageWidth * 3 + y * 3 + 1][0])
+                    coefficients_buffer[7][x][y] = Float32(self.PImage.vectorX[x * self.PImage.imageWidth * 3 + y * 3 + 2][0])
+                }
+            }
+            print (coefficients_buffer[7])
+            destView.coefficients_buffer = coefficients_buffer
         }
     }
     @IBAction func RenderView(_ sender: Any) {
@@ -311,17 +351,17 @@ class ImagesViewController: UIViewController  {
                 var thumbnail = UIImage()
                 option.isSynchronous = true
                 
-                
-                manager.requestImage(for: SelectedAssets[i], targetSize: CGSize(width: 256 * 3, height: 342 * 3), contentMode: .aspectFill, options: option, resultHandler: {(result, info)->Void in
+                //todo to mul 3
+                manager.requestImage(for: SelectedAssets[i], targetSize: CGSize(width: 256, height: 342), contentMode: .aspectFill, options: option, resultHandler: {(result, info)->Void in
                     thumbnail = result!
                     
                 })
-                """
+                /*
                 manager.requestImage(for: SelectedAssets[i], targetSize: PHImageManagerMaximumSize, contentMode: .aspectFill, options: option, resultHandler: {(result, info)->Void in
                     thumbnail = result!
                     
                 })
-                """
+                */
                 let data = thumbnail.jpegData(compressionQuality: 0.7)
                 //let newImage = UIImage(data: data!)
                 

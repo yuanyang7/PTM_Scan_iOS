@@ -9,11 +9,19 @@
 import UIKit
 import Metal
 import MetalKit
+import simd
+
+struct Uniforms {
+    var lightPos: float2
+}
 
 class RenderResViewController: UIViewController {
     
     var textureImg: UIImage!
     var textureImg2: UIImage!
+    var PImage : ProcessingImage!
+    var coefficients_buffer : [[[Float32]]]!
+    var lightPos : float2 = [0.0, 0.0]
     var device: MTLDevice!
     
     var metalLayer: CAMetalLayer!
@@ -122,14 +130,31 @@ class RenderResViewController: UIViewController {
         
         /// Metal texture to be drawn whenever the view controller is asked to render its view.
         let textureLoader = MTKTextureLoader(device: device)
-        var texture: MTLTexture = try! textureLoader.newTexture(cgImage: textureImg.cgImage!)
-        var texture2: MTLTexture = try! textureLoader.newTexture(cgImage: textureImg2.cgImage!)
+        // let texture: MTLTexture = try! textureLoader.newTexture(cgImage: textureImg.cgImage!)
+        // let texture2: MTLTexture = try! textureLoader.newTexture(cgImage: textureImg2.cgImage!)
+        let texture_co1: MTLTexture = texture2D(buffer: self.coefficients_buffer[0])
+        let texture_co2: MTLTexture = texture2D(buffer: self.coefficients_buffer[1])
+        let texture_co3: MTLTexture = texture2D(buffer: self.coefficients_buffer[2])
+        let texture_co4: MTLTexture = texture2D(buffer: self.coefficients_buffer[3])
+        let texture_co5: MTLTexture = texture2D(buffer: self.coefficients_buffer[4])
+        let texture_co6: MTLTexture = texture2D(buffer: self.coefficients_buffer[5])
+        let texture_cb: MTLTexture = texture2D(buffer: self.coefficients_buffer[6])
+        let texture_cr: MTLTexture = texture2D(buffer: self.coefficients_buffer[7])
+        
         let renderEncoder = commandBuffer
             .makeRenderCommandEncoder(descriptor: renderPassDescriptor)!
         renderEncoder.setRenderPipelineState(pipelineState)
         //renderEncoder.setVertexBuffer(vertexBuffer, offset: 0, index: 0)
-        renderEncoder.setFragmentTexture(texture, index: 0)
-        renderEncoder.setFragmentTexture(texture2, index: 1)
+        renderEncoder.setFragmentTexture(texture_co1, index: 0)
+        renderEncoder.setFragmentTexture(texture_co2, index: 1)
+        renderEncoder.setFragmentTexture(texture_co3, index: 2)
+        renderEncoder.setFragmentTexture(texture_co4, index: 3)
+        renderEncoder.setFragmentTexture(texture_co5, index: 4)
+        renderEncoder.setFragmentTexture(texture_co6, index: 5)
+        renderEncoder.setFragmentTexture(texture_cb, index: 6)
+        renderEncoder.setFragmentTexture(texture_cr, index: 7)
+        var uniforms = Uniforms(lightPos: self.lightPos)
+        renderEncoder.setFragmentBytes(&uniforms, length: MemoryLayout<Uniforms>.size, index: 1)
         renderEncoder
             .drawPrimitives(type: .triangleStrip, vertexStart: 0, vertexCount: 4, instanceCount: 1)
         renderEncoder.endEncoding()
@@ -147,6 +172,18 @@ class RenderResViewController: UIViewController {
             self.render()
         }
     }
+    //generate texture
+    public func texture2D(buffer:[[Float32]]) -> MTLTexture {
+        
+        let width = buffer[0].count
+        let weightsDescription = MTLTextureDescriptor.texture2DDescriptor(pixelFormat: .r32Float, width: width, height: buffer.count, mipmapped: false)
+        weightsDescription.usage = [.shaderRead,.shaderWrite,.pixelFormatView,.renderTarget]
+        let texture = device.makeTexture(descriptor: weightsDescription)
+        for i in 0 ..< buffer.count {
+            texture!.replace(region: MTLRegionMake2D(0, i, width, 1), mipmapLevel: 0, withBytes: buffer[i], bytesPerRow: width * 4)
+        }
+        return texture!
+    }
     
     //Touch
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -163,8 +200,8 @@ class RenderResViewController: UIViewController {
         var y = location.y - 667 / 2.0
         
         if(x > -100 && x < 100 && y > -100 && y < 100){
-            print(x / 100 ,y / 100)
-            
+            lightPos.x = Float(x / 100)
+            lightPos.y = Float(y / 100)
         }
     }
     
