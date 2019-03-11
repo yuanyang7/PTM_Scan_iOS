@@ -55,14 +55,33 @@ fragment float4 displayTexture(TextureMappingVertex mappingVertex [[ stage_in ]]
     float co6 = float4(texture6.sample(s, mappingVertex.textureCoordinate)).r;
     float cr = float4(texture_cr.sample(s, mappingVertex.textureCoordinate)).r;
     float cb = float4(texture_cb.sample(s, mappingVertex.textureCoordinate)).r;
-    
+    /*
     float luminance =
       uniforms.lightPos.x * uniforms.lightPos.x * (co1) * 0.2
     + uniforms.lightPos.y * uniforms.lightPos.y * (co2) * 0.2
     + uniforms.lightPos.x * uniforms.lightPos.y * (co3) * 1
     + uniforms.lightPos.x * (co4) * 1
     + uniforms.lightPos.y * (co5 - 0.3) * 1
-    - (co6) * 0.2
+    - (co6) * 0.3
+    ;
+     */
+    /*
+    float luminance =
+    uniforms.lightPos.x * uniforms.lightPos.x * (co1) * 0.2
+    + uniforms.lightPos.y * uniforms.lightPos.y * (co2) * 0.2
+    + uniforms.lightPos.x * uniforms.lightPos.y * (co3) * 1
+    + uniforms.lightPos.x * (co4) * 1
+    + uniforms.lightPos.y * (co5 - 0.3) * 1
+    + (co6) * 0.3
+    ;
+     */
+    float luminance =
+    uniforms.lightPos.x * uniforms.lightPos.x * (co1)
+    + uniforms.lightPos.y * uniforms.lightPos.y * (co2)
+    + uniforms.lightPos.x * uniforms.lightPos.y * (co3)
+    + uniforms.lightPos.x * (co4)
+    + uniforms.lightPos.y * (co5)
+    + (co6)
     ;
     /*
     luminance = luminance * 255.0;

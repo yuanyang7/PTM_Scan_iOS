@@ -128,14 +128,6 @@
                                     <action selector="previousImage:" destination="wuH-af-Chn" eventType="touchUpInside" id="4GF-RV-xHi"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PSg-6R-2bQ">
-                                <rect key="frame" x="321" y="529" width="45" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="render"/>
-                                <connections>
-                                    <action selector="imageRender:" destination="wuH-af-Chn" eventType="touchUpInside" id="2NZ-70-r7K"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZC8-VI-rfH">
                                 <rect key="frame" x="272" y="218" width="87" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -165,34 +157,6 @@
                                     <action selector="SliderCircleR:" destination="wuH-af-Chn" eventType="valueChanged" id="aO2-5R-pgI"/>
                                 </connections>
                             </slider>
-                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="-1" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="XUe-lH-H5J">
-                                <rect key="frame" x="259" y="447" width="118" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <connections>
-                                    <action selector="SliderLightX:" destination="wuH-af-Chn" eventType="valueChanged" id="6wT-CR-2ne"/>
-                                </connections>
-                            </slider>
-                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="-1" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="Acp-yq-OHo">
-                                <rect key="frame" x="259" y="492" width="118" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <connections>
-                                    <action selector="SliderLightY:" destination="wuH-af-Chn" eventType="valueChanged" id="SS0-CY-Bj9"/>
-                                </connections>
-                            </slider>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="lx:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aQE-cu-Spx">
-                                <rect key="frame" x="261" y="418" width="43" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="ly:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jdt-7c-Gfh">
-                                <rect key="frame" x="264" y="484" width="50" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="H5d-t5-yX5">
                                 <rect key="frame" x="311" y="338" width="55" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -202,38 +166,48 @@
                                 </connections>
                             </button>
                             <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="file_name" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="7gf-SC-bbr">
-                                <rect key="frame" x="182" y="569" width="97" height="30"/>
+                                <rect key="frame" x="267" y="489" width="97" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tyj-EP-by9">
-                                <rect key="frame" x="284" y="568" width="35" height="30"/>
+                                <rect key="frame" x="269" y="519" width="32" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="store"/>
+                                <state key="normal" title="save"/>
                                 <connections>
                                     <action selector="imageRenderStore:" destination="wuH-af-Chn" eventType="touchUpInside" id="aF6-wn-zss"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="k8Z-Mm-58t">
-                                <rect key="frame" x="344" y="568" width="31" height="30"/>
+                                <rect key="frame" x="332" y="519" width="31" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="read"/>
                                 <connections>
                                     <action selector="imageRenderRead:" destination="wuH-af-Chn" eventType="touchUpInside" id="XjJ-2R-lSI"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PNI-MG-CbL">
-                                <rect key="frame" x="8" y="569" width="72" height="30"/>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="ghO-e3-kkY">
+                                <rect key="frame" x="264" y="414" width="93" height="29"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="render-full"/>
+                                <segments>
+                                    <segment title="small"/>
+                                    <segment title="large"/>
+                                </segments>
                                 <connections>
-                                    <action selector="imageRenderFull:" destination="wuH-af-Chn" eventType="touchUpInside" id="uY3-LY-lL6"/>
+                                    <action selector="ImgScaleControl:" destination="wuH-af-Chn" eventType="valueChanged" id="0Ym-Bm-qve"/>
                                 </connections>
-                            </button>
+                            </segmentedControl>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="image scale" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ivw-H2-j4H">
+                                <rect key="frame" x="261" y="385" width="91" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bAC-sv-88l">
-                                <rect key="frame" x="115" y="569" width="45" height="30"/>
+                                <rect key="frame" x="325" y="586" width="45" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="render"/>
                                 <connections>
@@ -246,12 +220,11 @@
                     </view>
                     <connections>
                         <outlet property="ImagePreview" destination="oHN-br-lFc" id="Yzj-u4-Jg6"/>
-                        <outlet property="SliderLightXText" destination="aQE-cu-Spx" id="axW-vp-B2x"/>
-                        <outlet property="SliderLightYText" destination="jdt-7c-Gfh" id="g0k-oT-Q3P"/>
                         <outlet property="ViewPositionX" destination="mrI-EG-kGt" id="kdj-C8-pu2"/>
                         <outlet property="ViewPositionY" destination="DvV-hK-XCc" id="P6F-lL-5N0"/>
                         <outlet property="imagePreview" destination="oHN-br-lFc" id="qrB-EV-VUo"/>
                         <outlet property="imageRenderFilename" destination="7gf-SC-bbr" id="4Ln-0C-udi"/>
+                        <outlet property="segmentedControl" destination="ghO-e3-kkY" id="UKc-lI-Ec2"/>
                         <segue destination="ezW-rE-vxT" kind="showDetail" identifier="RenderResSegue" id="tsG-C2-4Lz"/>
                     </connections>
                 </viewController>

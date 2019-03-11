@@ -128,8 +128,6 @@ class RenderResViewController: UIViewController {
         
         let commandBuffer = commandQueue.makeCommandBuffer()!
         
-        /// Metal texture to be drawn whenever the view controller is asked to render its view.
-        let textureLoader = MTKTextureLoader(device: device)
         // let texture: MTLTexture = try! textureLoader.newTexture(cgImage: textureImg.cgImage!)
         // let texture2: MTLTexture = try! textureLoader.newTexture(cgImage: textureImg2.cgImage!)
         let texture_co1: MTLTexture = texture2D(buffer: self.coefficients_buffer[0])
@@ -174,7 +172,6 @@ class RenderResViewController: UIViewController {
     }
     //generate texture
     public func texture2D(buffer:[[Float32]]) -> MTLTexture {
-        
         let width = buffer[0].count
         let weightsDescription = MTLTextureDescriptor.texture2DDescriptor(pixelFormat: .r32Float, width: width, height: buffer.count, mipmapped: false)
         weightsDescription.usage = [.shaderRead,.shaderWrite,.pixelFormatView,.renderTarget]

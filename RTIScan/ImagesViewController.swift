@@ -18,8 +18,6 @@ import Surge
 
 class ImagesViewController: UIViewController  {
     
-    //test
-    
     @IBOutlet weak var imagePreview: UIImageView!
     
     var SelectedAssets = [PHAsset]()
@@ -39,6 +37,9 @@ class ImagesViewController: UIViewController  {
     
     
     var PImage : ProcessingImage!
+    var img_width = 256
+    var img_height = 342
+    var img_scale = 1.0
     
     //select circle
     var SliderCircleXVar = 0
@@ -70,6 +71,24 @@ class ImagesViewController: UIViewController  {
         
     }
   
+    @IBOutlet weak var segmentedControl: UISegmentedControl!
+    @IBAction func ImgScaleControl(_ sender: UISegmentedControl) {
+        switch segmentedControl.selectedSegmentIndex
+        {
+        case 0:
+            img_width = 256
+            img_height = 342
+            img_scale = 1.0
+            break
+        case 1:
+            img_width = 667 //Int(256.0 * 2.6)
+            img_height = 889 //Int(342 * 2.6)
+            img_scale = 2.6
+            break
+        default:
+            break
+        }
+    }
     
     @IBAction func SliderCircleX(_ sender: UISlider) {
         SliderCircleXVar = Int(sender.value)
@@ -156,7 +175,7 @@ class ImagesViewController: UIViewController  {
             /*
             PImage = ProcessingImage(toProcessImage: PhotoArray, imageNum : PhotoArray.count, imageWidth : Int(PhotoArray[0].photoImage.size.width), imageHeight : Int(PhotoArray[0].photoImage.size.height))
             */
-            PImage = ProcessingImage(toProcessImage: PhotoArray, imageNum : PhotoArray.count, imageWidth : 256, imageHeight : 342)
+            PImage = ProcessingImage(toProcessImage: PhotoArray, imageNum : PhotoArray.count, imageWidth : img_width, imageHeight : img_height)
             PImage.RenderingImgtoFile.read(fileName: text)
         }
         PImage.vectorX = PImage.RenderingImgtoFile.pixels
@@ -181,13 +200,13 @@ class ImagesViewController: UIViewController  {
             
             
             //crop image
-            """
+            /*
             UIGraphicsBeginImageContextWithOptions(CGSize(width: CGFloat(SliderCircleRVar * 2 * 3), height: CGFloat(SliderCircleRVar * 2 * 3)), true, CGFloat(1.0))
             PhotoArray[PhotoPreviewIndex].photoImage.draw(at: CGPoint(x: -SliderCircleXVar * 3, y: (-SliderCircleYVar + 218) * 3))
-            """
+            */
             //todo *3
-            UIGraphicsBeginImageContextWithOptions(CGSize(width: CGFloat(SliderCircleRVar * 2), height: CGFloat(SliderCircleRVar * 2)), true, CGFloat(1.0))
-            PhotoArray[PhotoPreviewIndex].photoImage.draw(at: CGPoint(x: -SliderCircleXVar, y: (-SliderCircleYVar + 218)))
+            UIGraphicsBeginImageContextWithOptions(CGSize(width: CGFloat(Int(Double(SliderCircleRVar) * 2.0 * img_scale)), height: CGFloat(Int(Double(SliderCircleRVar) * 2.0 * img_scale))), true, CGFloat(1.0))
+            PhotoArray[PhotoPreviewIndex].photoImage.draw(at: CGPoint(x: -Double(SliderCircleXVar) * img_scale, y: (-Double(SliderCircleYVar) * img_scale + 218.0 * img_scale ) ))
             let croppedImage = UIGraphicsGetImageFromCurrentImageContext()
             print(croppedImage?.size)
             UIGraphicsEndImageContext()
@@ -224,8 +243,8 @@ class ImagesViewController: UIViewController  {
             
             //crop image
             //todo add scale here
-            UIGraphicsBeginImageContextWithOptions(CGSize(width: CGFloat(SliderCircleRVar * 2 * 3), height: CGFloat(SliderCircleRVar * 2 * 3)), true, CGFloat(1.0))
-            PhotoArray[PhotoPreviewIndex].photoImage.draw(at: CGPoint(x: -SliderCircleXVar * 3, y: (-SliderCircleYVar + 218) * 3))
+            UIGraphicsBeginImageContextWithOptions(CGSize(width: CGFloat(Int(Double(SliderCircleRVar) * 2.0 * img_scale)), height: CGFloat(Int(Double(SliderCircleRVar) * 2.0 * img_scale))), true, CGFloat(1.0))
+            PhotoArray[PhotoPreviewIndex].photoImage.draw(at: CGPoint(x: -Double(SliderCircleXVar) * img_scale, y: (-Double(SliderCircleYVar) * img_scale + 218.0 * img_scale ) ))
             let croppedImage = UIGraphicsGetImageFromCurrentImageContext()
             print(croppedImage?.size)
             UIGraphicsEndImageContext()
@@ -352,9 +371,8 @@ class ImagesViewController: UIViewController  {
                 let option = PHImageRequestOptions()
                 var thumbnail = UIImage()
                 option.isSynchronous = true
-                
                 //todo to mul 3
-                manager.requestImage(for: SelectedAssets[i], targetSize: CGSize(width: 256, height: 342), contentMode: .aspectFill, options: option, resultHandler: {(result, info)->Void in
+                manager.requestImage(for: SelectedAssets[i], targetSize: CGSize(width: img_width, height: img_height), contentMode: .aspectFill, options: option, resultHandler: {(result, info)->Void in
                     thumbnail = result!
                     
                 })
@@ -370,7 +388,7 @@ class ImagesViewController: UIViewController  {
                 let photoArrayTemp = RTIImage(photoImage: UIImage(data: data!)!)
                 self.PhotoArray.append(photoArrayTemp as RTIImage)
                 //todo scale
-                print(photoArrayTemp.photoImage.size)
+                print("?",photoArrayTemp.photoImage.size)
                 
             }
             /*
