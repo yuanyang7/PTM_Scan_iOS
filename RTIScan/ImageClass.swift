@@ -162,8 +162,8 @@ class ProcessingImage {
         //verctorX
         self.RenderingImgtoFile = RenderImgtoFile(imageWidth : self.imageWidth, imageHeight : self.imageHeight)
         
-        self.scale = [0.5, 0.5, 0.5, 0.5, 0.5, 0.5]
-        self.bias = [0.5, 0.5, 0.5, 0.5, 0.5, 0.5]
+        self.scale = [1, 1, 1, 1, 1, 1]
+        self.bias = [0, 0, 0, 0, 0, 0]
 
         //self.vectorY_G = [Vector](repeating: temp, count: imageWidth*imageHeight*imageNum)
         //self.vectorY_B = [Vector](repeating: temp, count: imageWidth*imageHeight*imageNum)
@@ -174,6 +174,7 @@ class ProcessingImage {
         for (_, image) in toProcessImage.enumerated() {
             image.lightPositionX /= CGFloat(50.0)
             image.lightPositionY /= CGFloat(50.0)
+            print(image.lightPositionX, image.lightPositionY)
             
             /*
             image.lightPositionZ = sqrt(image.lightPositionX * image.lightPositionX

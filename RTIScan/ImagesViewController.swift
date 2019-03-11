@@ -153,7 +153,10 @@ class ImagesViewController: UIViewController  {
             PImage.RenderingImgtoFile.read(fileName: text)
         }
         else {
+            /*
             PImage = ProcessingImage(toProcessImage: PhotoArray, imageNum : PhotoArray.count, imageWidth : Int(PhotoArray[0].photoImage.size.width), imageHeight : Int(PhotoArray[0].photoImage.size.height))
+            */
+            PImage = ProcessingImage(toProcessImage: PhotoArray, imageNum : PhotoArray.count, imageWidth : 256, imageHeight : 342)
             PImage.RenderingImgtoFile.read(fileName: text)
         }
         PImage.vectorX = PImage.RenderingImgtoFile.pixels
@@ -271,15 +274,15 @@ class ImagesViewController: UIViewController  {
         if segue.identifier == "RenderResSegue"{
             
             let destView = segue.destination as! RenderResViewController
-            destView.textureImg = self.PhotoArray[0].photoImage
-            destView.textureImg2 = self.PhotoArray[1].photoImage
+            //destView.textureImg = self.PhotoArray[0].photoImage
+            //destView.textureImg2 = self.PhotoArray[1].photoImage
             destView.PImage = self.PImage
             var coefficients_buffer : [[[Float32]]]
             let coefficients_buffer_tmp1 = [Float32](repeating: 0.0, count: self.PImage.imageWidth)
             let coefficients_buffer_tmp2 = [[Float32]](repeating: coefficients_buffer_tmp1, count: self.PImage.imageHeight)
             coefficients_buffer = [[[Float32]]](repeating: coefficients_buffer_tmp2, count: 8)  // 0~6 coefficients, 7,8: crcb
             
-            for x in 0..<self.PImage.imageHeight {
+            for x in 0..<self.PImage.imageHeight - 2{
                 for y in 0..<self.PImage.imageWidth {
                     for i in 0...5 {
                         coefficients_buffer[i][x][y] = Float32(self.PImage.vectorX[x * self.PImage.imageWidth * 3 + y * 3][i])
