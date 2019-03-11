@@ -371,8 +371,9 @@ class ImagesViewController: UIViewController  {
                 let option = PHImageRequestOptions()
                 var thumbnail = UIImage()
                 option.isSynchronous = true
+                option.resizeMode = PHImageRequestOptionsResizeMode(rawValue: 2)!
                 //todo to mul 3
-                manager.requestImage(for: SelectedAssets[i], targetSize: CGSize(width: img_width, height: img_height), contentMode: .aspectFill, options: option, resultHandler: {(result, info)->Void in
+                manager.requestImage(for: SelectedAssets[i], targetSize: CGSize(width: img_width, height: img_height), contentMode: PHImageContentMode.aspectFill, options: option, resultHandler: {(result, info)->Void in
                     thumbnail = result!
                     
                 })
@@ -382,6 +383,7 @@ class ImagesViewController: UIViewController  {
                     
                 })
                 */
+                
                 let data = thumbnail.jpegData(compressionQuality: 0.7)
                 //let newImage = UIImage(data: data!)
                 
