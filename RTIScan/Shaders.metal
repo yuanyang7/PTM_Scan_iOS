@@ -7,6 +7,7 @@
 //
 
 #include <metal_stdlib>
+#include <metal_geometric>
 using namespace metal;
 
 typedef struct {
@@ -75,13 +76,19 @@ fragment float4 displayTexture(TextureMappingVertex mappingVertex [[ stage_in ]]
     + (co6) * 0.3
     ;
      */
-    float luminance =
+    
+    float lu = (co3 * co5 - 2 * co2 * co4) / (4 * co1 * co2 - co3 * co3);
+    float lz = (co3 * co4 - 2 * co1 * co5) / (4 * co1 * co2 - co3 * co3);
+    
+    
+    float luminance = 0.5 * (
     uniforms.lightPos.x * uniforms.lightPos.x * (co1)
     + uniforms.lightPos.y * uniforms.lightPos.y * (co2)
     + uniforms.lightPos.x * uniforms.lightPos.y * (co3)
     + uniforms.lightPos.x * (co4)
     + uniforms.lightPos.y * (co5)
-    + (co6)
+    + (co6))
+    + 0.5 * pow(clamp(dot(float3(lu, lz, sqrt(1 - lu * lu - lz * lz)), reflect(float3(-uniforms.lightPos.x, -uniforms.lightPos.y, -sqrt(1 - uniforms.lightPos.x * uniforms.lightPos.x - uniforms.lightPos.y * uniforms.lightPos.y)) ,float3(0, 0, 1))), 0, 1) , 5)
     ;
     /*
     luminance = luminance * 255.0;
