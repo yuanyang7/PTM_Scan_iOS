@@ -258,6 +258,24 @@
                                     </imageView>
                                 </subviews>
                             </scrollView>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="QZ1-Vs-VXP">
+                                <rect key="frame" x="83" y="73" width="209" height="29"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <segments>
+                                    <segment title="PTM"/>
+                                    <segment title="PTM+Specular"/>
+                                </segments>
+                                <connections>
+                                    <action selector="segmentSpecular:" destination="ezW-rE-vxT" eventType="valueChanged" id="Lly-qT-W66"/>
+                                </connections>
+                            </segmentedControl>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Change light direction: Touch from the place outside the image view." lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TWU-Pd-DAV">
+                                <rect key="frame" x="9" y="118" width="292" height="41"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="X8F-sf-Az0"/>
@@ -265,6 +283,7 @@
                     <connections>
                         <outlet property="scrollImageView" destination="LcP-uh-YvQ" id="Hyb-Tm-7wQ"/>
                         <outlet property="scrollView" destination="blL-cZ-Ap5" id="nPJ-4o-iw3"/>
+                        <outlet property="segmentSpecular" destination="QZ1-Vs-VXP" id="ObW-J9-ZTJ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vl5-Wx-w8h" userLabel="First Responder" sceneMemberID="firstResponder"/>

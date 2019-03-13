@@ -44,13 +44,31 @@ class RenderResViewController: UIViewController, UIScrollViewDelegate {
     
     var timer: CADisplayLink!
     
+    var fragmentProgramName = "displayTexture"
+    
     //scroll
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var scrollImageView: UIImageView!
+    //segment
+    var fragmentProgram : MTLFunction?
+    @IBOutlet weak var segmentSpecular: UISegmentedControl!
     
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    @IBAction func segmentSpecular(_ sender: Any) {
+        switch segmentSpecular.selectedSegmentIndex
+        {
+        case 0:
+            self.fragmentProgramName = "displayTexture"
+            pipelineStateInit()
+            break
+        case 1:
+            self.fragmentProgramName = "displayTextureSpecular"
+            pipelineStateInit()
+            break
+        default:
+            break
+        }
+    }
+    func pipelineStateInit() {
         
         device = MTLCreateSystemDefaultDevice()
         
@@ -70,7 +88,7 @@ class RenderResViewController: UIViewController, UIScrollViewDelegate {
         
         // 1
         let defaultLibrary = device.makeDefaultLibrary()!
-        let fragmentProgram = defaultLibrary.makeFunction(name: "displayTexture")
+        fragmentProgram = defaultLibrary.makeFunction(name: fragmentProgramName)
         let vertexProgram = defaultLibrary.makeFunction(name: "mapTexture")
         
         // 2
@@ -105,6 +123,11 @@ class RenderResViewController: UIViewController, UIScrollViewDelegate {
         self.scrollView.minimumZoomScale = 1.0
         self.scrollView.maximumZoomScale = 6.0
         self.scrollView.delegate = self
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        pipelineStateInit()
 
         
     }
@@ -202,21 +225,24 @@ class RenderResViewController: UIViewController, UIScrollViewDelegate {
         var location = CGPoint(x:0, y:0)
         
         self.view.endEditing(true)
-        
         let touch = touches.first
         
         location = touch!.location(in: self.view)
         //375 x 667
-        var x = Float((location.x - 375 / 2.0) / (375 / 2))
-        var y = Float((location.y - 667 / 2.0) / (667 / 2))
+        let height = scrollImageView.layer.frame.size.height
+        let width = scrollImageView.layer.frame.size.width
         
-        if(x > -1 && x < 1 && y > -1 && y < 1 && (x * x + y * y <= 1)){
-            lightPos.x = x
-            lightPos.y = y
-            print(lightPos)
+        if (location.y > view.layer.frame.size.height - height){
+            let x = Float((location.x - width / 2.0) / (width / 2))
+            let y = Float((location.y - height / 2.0) / (height / 2))
+            
+            if(x > -1 && x < 1 && y > -1 && y < 1 && (x * x + y * y <= 1)){
+                lightPos.x = x
+                lightPos.y = y
+                print(lightPos)
+            }
         }
     }
-    
 
     /*
     // MARK: - Navigation
