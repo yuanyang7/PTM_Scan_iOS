@@ -248,10 +248,24 @@
                                     <action selector="backToLastView" destination="ezW-rE-vxT" eventType="touchUpInside" id="qlW-n0-xKA"/>
                                 </connections>
                             </button>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="blL-cZ-Ap5">
+                                <rect key="frame" x="0.0" y="167" width="375" height="500"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LcP-uh-YvQ">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="500"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    </imageView>
+                                </subviews>
+                            </scrollView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="X8F-sf-Az0"/>
                     </view>
+                    <connections>
+                        <outlet property="scrollImageView" destination="LcP-uh-YvQ" id="Hyb-Tm-7wQ"/>
+                        <outlet property="scrollView" destination="blL-cZ-Ap5" id="nPJ-4o-iw3"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vl5-Wx-w8h" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

@@ -15,7 +15,7 @@ struct Uniforms {
     var lightPos: float2
 }
 
-class RenderResViewController: UIViewController {
+class RenderResViewController: UIViewController, UIScrollViewDelegate {
     
     var textureImg: UIImage!
     var textureImg2: UIImage!
@@ -44,6 +44,10 @@ class RenderResViewController: UIViewController {
     
     var timer: CADisplayLink!
     
+    //scroll
+    @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var scrollImageView: UIImageView!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,9 +58,13 @@ class RenderResViewController: UIViewController {
         metalLayer.device = device           // 2
         metalLayer.pixelFormat = .bgra8Unorm // 3
         metalLayer.framebufferOnly = true    // 4
-        metalLayer.frame = view.layer.frame  // 5
-        view.layer.addSublayer(metalLayer)   // 6
+        //metalLayer.frame = view.layer.frame  // 5
+        let y1_view = scrollImageView.layer.frame.size.height
+        let width_view = scrollImageView.layer.frame.size.width
+        let height_view = width_view / 3 * 4
+        metalLayer.frame = CGRect(x: 0, y: y1_view - height_view, width: width_view, height: height_view)
         
+        scrollImageView.layer.addSublayer(metalLayer)   // 6
         //let dataSize = vertexData.count * MemoryLayout.size(ofValue: vertexData[0]) // 1
         //vertexBuffer = device.makeBuffer(bytes: vertexData, length: dataSize, options: []) // 2
         
@@ -93,10 +101,16 @@ class RenderResViewController: UIViewController {
         swipeRight.direction = UISwipeGestureRecognizer.Direction.right
         self.view.addGestureRecognizer(swipeRight)
         
+        //scroll
+        self.scrollView.minimumZoomScale = 1.0
+        self.scrollView.maximumZoomScale = 6.0
+        self.scrollView.delegate = self
 
         
     }
-    
+    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+        return self.scrollImageView
+    }
     @objc func respondToSwipeGesture(gesture: UIGestureRecognizer) {
         if let swipeGesture = gesture as? UISwipeGestureRecognizer {
             switch swipeGesture.direction {
