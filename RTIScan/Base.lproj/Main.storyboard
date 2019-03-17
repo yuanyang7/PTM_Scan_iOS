@@ -128,14 +128,6 @@
                                     <action selector="previousImage:" destination="wuH-af-Chn" eventType="touchUpInside" id="4GF-RV-xHi"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZC8-VI-rfH">
-                                <rect key="frame" x="272" y="218" width="87" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Select Circle"/>
-                                <connections>
-                                    <action selector="SelectCircle:" destination="wuH-af-Chn" eventType="touchUpInside" id="avg-ty-Vz0"/>
-                                </connections>
-                            </button>
                             <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="100" minValue="0.0" maxValue="256" translatesAutoresizingMaskIntoConstraints="NO" id="btX-aJ-YOu">
                                 <rect key="frame" x="6" y="180" width="118" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -214,12 +206,21 @@
                                     <action selector="RenderView:" destination="wuH-af-Chn" eventType="touchUpInside" id="RVY-Qe-c7e"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZC8-VI-rfH">
+                                <rect key="frame" x="305" y="143" width="65" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="magnifier"/>
+                                <connections>
+                                    <action selector="SelectLight:" destination="wuH-af-Chn" eventType="touchUpInside" id="DEA-hQ-RIC"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="N4d-vB-Jvc"/>
                     </view>
                     <connections>
                         <outlet property="ImagePreview" destination="oHN-br-lFc" id="Yzj-u4-Jg6"/>
+                        <outlet property="SelectLightBtn" destination="ZC8-VI-rfH" id="Lju-3a-BCi"/>
                         <outlet property="ViewPositionX" destination="mrI-EG-kGt" id="kdj-C8-pu2"/>
                         <outlet property="ViewPositionY" destination="DvV-hK-XCc" id="P6F-lL-5N0"/>
                         <outlet property="imagePreview" destination="oHN-br-lFc" id="qrB-EV-VUo"/>

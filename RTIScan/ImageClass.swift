@@ -165,10 +165,10 @@ class ProcessingImage {
     
     func normalizedLight() {
         for (_, image) in toProcessImage.enumerated() {
-            image.lightPositionX /= CGFloat(50.0)
-            image.lightPositionY /= CGFloat(50.0)
+            //image.lightPositionX /= CGFloat(50.0)
+            //image.lightPositionY /= CGFloat(50.0)
             print(image.lightPositionX, image.lightPositionY)
-            
+            //todo
             /*
             image.lightPositionZ = sqrt(image.lightPositionX * image.lightPositionX
                                       + image.lightPositionY * image.lightPositionY)
@@ -180,32 +180,10 @@ class ProcessingImage {
         }
     }
     func renderImageResult(l_u_raw : Double, l_v_raw : Double) {
-        /*
-        var l_u = l_u_raw / 50 + 1
-        var l_v = l_v_raw / 50 + 1
-        l_u /= self.renderingBufferStep
-        l_v /= self.renderingBufferStep
-        print("l position", l_u, l_v)
-        var rgba = RGBA(image: toProcessImage[0].photoImage)!
-        print("image size", rgba.width, imageWidth)
-        for x in 0..<imageHeight{
-            for y in 0..<imageWidth {
-                let index = x * rgba.width + y
-                var pixel = rgba.pixels[index]
-                pixel.red = self.RenderingImgtoFile.pixels[Int(l_u) * self.renderingBufferCount + Int(l_v)][x * imageWidth * 3 + y * 3]
-                pixel.green = self.RenderingImgtoFile.pixels[Int(l_u) * self.renderingBufferCount + Int(l_v)][x * imageWidth * 3 + y * 3 + 1]
-                pixel.blue = self.RenderingImgtoFile.pixels[Int(l_u) * self.renderingBufferCount + Int(l_v)][x * imageWidth * 3 + y * 3 + 2]
-                //pixel.green = self.RenderingImgtoFile.pixels[Int(l_u) * self.renderingBufferCount + Int(l_v)][x * imageWidth * 3 + y * 3 + 1]
-                //pixel.blue = self.RenderingImgtoFile.pixels[Int(l_u) * self.renderingBufferCount + Int(l_v)][x * imageWidth * 3 + y * 3 + 2]
-                rgba.pixels[index] = pixel
-            }
-        }
-        
-        toProcessImage[0].photoImage = rgba.toUIImage()!
-         */
-        
+
     }
     func renderImageFUll() {
+        //deprecated
         for l_u in stride(from: -1, to: 1, by: self.renderingBufferStep) {
             for l_v in stride(from: -1, to: 1, by: self.renderingBufferStep) {
                 let tmp =  ((l_u + 1) / self.renderingBufferStep) * Double(self.renderingBufferCount)
@@ -275,6 +253,7 @@ class ProcessingImage {
     }
     
     func renderImage(){
+        ///deprecated
         let rgba = RGBA(image: toProcessImage[0].photoImage)!
         for x in 0..<imageHeight{
             for y in 0..<imageWidth {
@@ -335,78 +314,33 @@ class ProcessingImage {
             matrixA[3][index] = Double(lu)
             matrixA[4][index] = Double(lv)
             matrixA[5][index] = Double(1.0)
-            /*
-            var doubleTemp = [Double]()
-            let lu = toProcessImage[index].lightPositionX
-            let lv = toProcessImage[index].lightPositionY
-            doubleTemp.append(Double(lu * lu))
-            doubleTemp.append(Double(lv * lv))
-            doubleTemp.append(Double(lu * lv))
-            doubleTemp.append(Double(lu))
-            doubleTemp.append(Double(lv))
-            doubleTemp.append(Double(1.0))
-            matrixA.append(doubleTemp)
-             */
             
             //matrixY
-            //?
             let img = toProcessImage[index].photoImage
             let pixelData = img.cgImage!.dataProvider!.data
             let data: UnsafePointer<UInt8> = CFDataGetBytePtr(pixelData)
             print(index, imageHeight, imageWidth)
             for x in 0..<imageHeight {
                 for y in 0..<imageWidth {
-                    //var redval: CGFloat = 0
-                    //var greenval: CGFloat = 0
-                    //var blueval: CGFloat = 0
-                    //var alphaval: CGFloat = 0
-                    //let pixelValue = toProcessImage[index].photoImage.getPixelColor(pos: CGPoint(x: x, y: y))
-                    //pixelValue.getRed(&redval, green: &greenval, blue: &blueval, alpha: &alphaval)
-                    let pixelInfo: Int = ((imageWidth * x) + y) * 4
+                  let pixelInfo: Int = ((imageWidth * x) + y) * 4
                     
                     let r = Double(data[pixelInfo])     / Double(255.0)
                     let g = Double(data[pixelInfo + 1]) / Double(255.0)
                     let b = Double(data[pixelInfo + 2]) / Double(255.0)
-                    
-                    //return UIColor(red: r, green: g, blue: b, alpha: 0.0)
+    
                     //luminance (0.2126*R + 0.7152*G + 0.0722*B
                     //to ycc
                     vectorY[x * imageWidth * 3 + y * 3][index] = r * 0.2126 + g * 0.7152 + b * 0.0722
+  
                     //cbcr
                     if index == 0 {
-                        //vectorY[x * imageWidth * 3 + y * 3 + 1][index] = 0.5389 * (b - vectorY[x * imageWidth * 3 + y * 3][index])
-                        //vectorY[x * imageWidth * 3 + y * 3 + 2][index] = 0.6350 * (r - vectorY[x * imageWidth * 3 + y * 3][index])
-                        //vectorX[x * imageWidth * 3 + y * 3 + 1][0] = vectorY[x * imageWidth * 3 + y * 3 + 1][0]
-                        //vectorX[x * imageWidth * 3 + y * 3 + 2][0] = vectorY[x * imageWidth * 3 + y * 3 + 2][0]
                         vectorX[x * imageWidth * 3 + y * 3 + 1][0] = 0.5389 * (b - vectorY[x * imageWidth * 3 + y * 3][index])
                         vectorX[x * imageWidth * 3 + y * 3 + 2][0] = 0.6350 * (r - vectorY[x * imageWidth * 3 + y * 3][index])
                     }
-                    //print("ycc, ", vectorY[x * imageWidth * 3 + y * 3][index], vectorY[x * imageWidth * 3 + y * 3 + 1][index], vectorY[x * imageWidth * 3 + y * 3 + 2][index])
-                    //rgb
-                    //vectorY[x * imageWidth * 3 + y * 3][index] = Double(redval)
-                    //vectorY[x * imageWidth * 3 + y * 3 + 1][index] = Double(greenval)
-                    //vectorY[x * imageWidth * 3 + y * 3 + 2][index] = Double(blueval)
-                }
-            }
-            print("end")
-            /*
-            //unscale color
-            for x in 0..<imageHeight {
-                for y in 0..<imageWidth {
-                    var redval: CGFloat = 0
-                    var greenval: CGFloat = 0
-                    var blueval: CGFloat = 0
-                    var alphaval: CGFloat = 0
-                    let pixelValue = toProcessImage[index].photoImage.getPixelColor(pos: CGPoint(x: x, y: y))
-                    pixelValue.getRed(&redval, green: &greenval, blue: &blueval, alpha: &alphaval)
-                    
-                    self.unscaledColor[x * imageWidth * 3 + y * 3] = Double(redval) / vectorY[x * imageWidth * 3 + y * 3][0] //todo improve add all
-                    self.unscaledColor[x * imageWidth * 3 + y * 3 + 1] = Double(greenval) / vectorY[x * imageWidth * 3 + y * 3][0]
-                    self.unscaledColor[x * imageWidth * 3 + y * 3 + 2] = Double(blueval) / vectorY[x * imageWidth * 3 + y * 3][0]
 
                 }
             }
-            */
+            print("end")
             
         }
         
@@ -435,12 +369,9 @@ class ProcessingImage {
                 for c in 0...0 {
                     let tempIndex = x * imageWidth * 3 + y * 3 + c
                     B = matMul(mat1: transpose(inputMatrix: u), mat2: [vectorY[tempIndex]])
-                    //print("B", B)
                     for index in 0..<6 {
                         //vectorX[tempIndex][index] = (B[0][index] / s[index][index] + self.bias[index]) * self.scale[index]
                         X1[0][index] = B[0][index] / s[index][index]
-                        //todo scale bias
-                        
                         }
                     X2 = matMul(mat1: v, mat2: X1)
                     vectorX[tempIndex] = X2[0]

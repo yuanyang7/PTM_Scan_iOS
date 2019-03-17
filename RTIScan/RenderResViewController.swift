@@ -113,6 +113,12 @@ class RenderResViewController: UIViewController, UIScrollViewDelegate {
         timer = CADisplayLink(target: self, selector: #selector(gameloop))
         timer.add(to: RunLoop.main, forMode: .default)
         
+
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        pipelineStateInit()
         //swipe
         let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
         swipeRight.numberOfTouchesRequired = 2
@@ -123,11 +129,6 @@ class RenderResViewController: UIViewController, UIScrollViewDelegate {
         self.scrollView.minimumZoomScale = 1.0
         self.scrollView.maximumZoomScale = 6.0
         self.scrollView.delegate = self
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        pipelineStateInit()
 
         
     }
@@ -231,10 +232,10 @@ class RenderResViewController: UIViewController, UIScrollViewDelegate {
         //375 x 667
         let height = scrollImageView.layer.frame.size.height
         let width = scrollImageView.layer.frame.size.width
-        
-        if (location.y > view.layer.frame.size.height - height){
+        let scroll_origin_y = view.layer.frame.size.height - height
+        if (location.y > scroll_origin_y){
             let x = Float((location.x - width / 2.0) / (width / 2))
-            let y = Float((location.y - height / 2.0) / (height / 2))
+            let y = Float((location.y - scroll_origin_y - height / 2.0) / (height / 2))
             
             if(x > -1 && x < 1 && y > -1 && y < 1 && (x * x + y * y <= 1)){
                 lightPos.x = x

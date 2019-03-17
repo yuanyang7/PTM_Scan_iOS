@@ -31,10 +31,16 @@ class ImagesViewController: UIViewController  {
     let circleLayer = CAShapeLayer();
     
     //circle parameters
-    let circlePostionX = 100.0;
-    let circlePostionY = 100.0;
-    let circleRadius = 50.0;
+    var circlePostionX = 100.0;
+    var circlePostionY = 100.0;
+    var circleRadius = 50.0;
     
+    let circlePostionXSmall = 100.0
+    let circlePostionYSmall = 100.0;
+    let circleRadiusSmall = 50.0;
+    let circlePostionXLarge = 150.0
+    let circlePostionYLarge = 150.0;
+    let circleRadiusLarge = 100.0;
     
     var PImage : ProcessingImage!
     var img_width = 256
@@ -52,14 +58,15 @@ class ImagesViewController: UIViewController  {
     
     var CropImageOverlap : UIImageView!
     
+    //enlarge light selecting view
+    private var lightingSelectionEnlargeView: UIView!
+    
     //@IBOutlet weak var SliderCircleXVar: UISlider!
     //@IBOutlet weak var SliderCircleYVar: UISlider!
     //@IBOutlet weak var SliderCircleRVar: UISlider!
     
     @IBOutlet weak var ViewPositionY: UILabel!
     @IBOutlet weak var ViewPositionX: UILabel!
-    @IBOutlet weak var SliderLightXText: UILabel!
-    @IBOutlet weak var SliderLightYText: UILabel!
     @IBAction func imageProcess(_ sender: Any) {
         
         PImage = ProcessingImage(toProcessImage: PhotoArray, imageNum : PhotoArray.count, imageWidth : Int(PhotoArray[0].photoImage.size.width), imageHeight : Int(PhotoArray[0].photoImage.size.height))
@@ -91,47 +98,27 @@ class ImagesViewController: UIViewController  {
     }
     
     @IBAction func SliderCircleX(_ sender: UISlider) {
-        SliderCircleXVar = Int(sender.value)
-        drawSelectedCircle()
+        if circleRadius == circleRadiusSmall{
+            SliderCircleXVar = Int(sender.value)
+            drawSelectedCircle()
+        }
     }
     @IBAction func SliderCircleY(_ sender: UISlider) {
-        SliderCircleYVar = Int(sender.value)
-        drawSelectedCircle()
+        if circleRadius == circleRadiusSmall{
+            SliderCircleYVar = Int(sender.value)
+            drawSelectedCircle()
+        }
     }
     @IBAction func SliderCircleR(_ sender: UISlider) {
-        SliderCircleRVar = Int(sender.value)
-        drawSelectedCircle()
-    }
-    @IBAction func SelectCircle(_ sender: Any) {
-
-    }
-    @IBAction func SliderLightX(_ sender: UISlider) {
-        if (PImage != nil){
-            PImage.LightXRender = Double(sender.value)
+            if circleRadius == circleRadiusSmall{
+            SliderCircleRVar = Int(sender.value)
+            drawSelectedCircle()
         }
-        SliderLightXText.text = String(sender.value)
     }
-    @IBAction func SliderLightY(_ sender: UISlider) {
-        if (PImage != nil) {
-            PImage.LightYRender = Double(sender.value)}
-        SliderLightYText.text = String(sender.value)
-    }
+    @IBOutlet weak var SelectLightBtn: UIButton!
     
-    
-    @IBAction func imageRender(_ sender: Any) {
-        PImage.renderImage()
-        self.imagePreview.image = PImage.toProcessImage[0].photoImage
+    @IBAction func SelectLight(_ sender: Any) {
         
-    }
-    @IBAction func imageRenderFull(_ sender: Any) {
-        PImage.renderImageFUll()
-        
-        //Alert box
-        let alert = UIAlertController(title: "Done!", message: "Complete rendering all the results!", preferredStyle: UIAlertController.Style.alert)
-        // add an action (button)
-        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
-        // show the alert
-        self.present(alert, animated: true, completion: nil)
     }
     @IBOutlet weak var imageRenderFilename: UITextField!
     @IBAction func imageRenderStore(_ sender: Any) { //VertexX
@@ -149,23 +136,6 @@ class ImagesViewController: UIViewController  {
         self.present(alert, animated: true, completion: nil)
         
     }
-    /*
-    @IBAction func imageRenderStore(_ sender: Any) {
-        let text: String = imageRenderFilename.text!
-        print(text)
-        if PImage != nil {
-            PImage.RenderingImgtoFile.store(fileName: text)
-        }
-        
-        //Alert box
-        let alert = UIAlertController(title: "Saved!", message: "PTM file saved!", preferredStyle: UIAlertController.Style.alert)
-        // add an action (button)
-        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
-        // show the alert
-        self.present(alert, animated: true, completion: nil)
-        
-    }
-    */
     @IBAction func imageRenderRead(_ sender: Any) {
         let text: String = imageRenderFilename.text!
         if PImage != nil {
@@ -198,33 +168,18 @@ class ImagesViewController: UIViewController  {
             }
             self.imagePreview.image = PhotoArray[PhotoPreviewIndex].photoImage
             
-            
-            //crop image
-            /*
-            UIGraphicsBeginImageContextWithOptions(CGSize(width: CGFloat(SliderCircleRVar * 2 * 3), height: CGFloat(SliderCircleRVar * 2 * 3)), true, CGFloat(1.0))
-            PhotoArray[PhotoPreviewIndex].photoImage.draw(at: CGPoint(x: -SliderCircleXVar * 3, y: (-SliderCircleYVar + 218) * 3))
-            */
-            //todo *3
             UIGraphicsBeginImageContextWithOptions(CGSize(width: CGFloat(Int(Double(SliderCircleRVar) * 2.0 * img_scale)), height: CGFloat(Int(Double(SliderCircleRVar) * 2.0 * img_scale))), true, CGFloat(1.0))
             PhotoArray[PhotoPreviewIndex].photoImage.draw(at: CGPoint(x: -Double(SliderCircleXVar) * img_scale, y: (-Double(SliderCircleYVar) * img_scale + 218.0 * img_scale ) ))
             let croppedImage = UIGraphicsGetImageFromCurrentImageContext()
-            print(croppedImage?.size)
             UIGraphicsEndImageContext()
             self.CropImageOverlap.image = croppedImage
             self.view.addSubview(CropImageOverlap)
             view.layer.addSublayer(circleLayer)
             
-            /*
-            let cropImg = CIImage(image: PhotoArray[PhotoPreviewIndex].photoImage)!.cropped(to: CGRect(x: SliderCircleXVar, y: (SliderCircleYVar - 218), width: SliderCircleRVar, height: SliderCircleRVar))
-            let cropUIImg = UIImage(ciImage: cropImg, scale: 1, orientation: PhotoArray[PhotoPreviewIndex].photoImage.imageOrientation)
-            self.imagePreview.image = cropUIImg
-            //self.view.addSubview(CropImageOverlap)
-            */
-            
             
             //drawing plots
-            dotLayer.path = UIBezierPath(ovalIn: CGRect(x: PhotoArray[PhotoPreviewIndex].lightPositionX + CGFloat(circlePostionX), y: PhotoArray[PhotoPreviewIndex].lightPositionY + CGFloat(circlePostionY), width: 2, height: 2)).cgPath;
-            dotLayer.strokeColor = UIColor.blue.cgColor
+            dotLayer.path = UIBezierPath(ovalIn: CGRect(x: PhotoArray[PhotoPreviewIndex].lightPositionX * CGFloat(circleRadius) + CGFloat(circlePostionX), y: PhotoArray[PhotoPreviewIndex].lightPositionY * CGFloat(circleRadius) + CGFloat(circlePostionY), width: 2, height: 2)).cgPath;
+            dotLayer.strokeColor = UIColor.green.cgColor
             view.layer.addSublayer(dotLayer)
             
             
@@ -242,7 +197,6 @@ class ImagesViewController: UIViewController  {
             self.imagePreview.image = PhotoArray[PhotoPreviewIndex].photoImage
             
             //crop image
-            //todo add scale here
             UIGraphicsBeginImageContextWithOptions(CGSize(width: CGFloat(Int(Double(SliderCircleRVar) * 2.0 * img_scale)), height: CGFloat(Int(Double(SliderCircleRVar) * 2.0 * img_scale))), true, CGFloat(1.0))
             PhotoArray[PhotoPreviewIndex].photoImage.draw(at: CGPoint(x: -Double(SliderCircleXVar) * img_scale, y: (-Double(SliderCircleYVar) * img_scale + 218.0 * img_scale ) ))
             let croppedImage = UIGraphicsGetImageFromCurrentImageContext()
@@ -253,8 +207,8 @@ class ImagesViewController: UIViewController  {
             view.layer.addSublayer(circleLayer)
             
             //drawing plots
-            dotLayer.path = UIBezierPath(ovalIn: CGRect(x: PhotoArray[PhotoPreviewIndex].lightPositionX + CGFloat(circlePostionX), y: PhotoArray[PhotoPreviewIndex].lightPositionY + CGFloat(circlePostionY), width: 2, height: 2)).cgPath;
-            dotLayer.strokeColor = UIColor.blue.cgColor
+            dotLayer.path = UIBezierPath(ovalIn: CGRect(x: PhotoArray[PhotoPreviewIndex].lightPositionX * CGFloat(circleRadius) + CGFloat(circlePostionX), y: PhotoArray[PhotoPreviewIndex].lightPositionY * CGFloat(circleRadius) + CGFloat(circlePostionY), width: 2, height: 2)).cgPath;
+            dotLayer.strokeColor = UIColor.green.cgColor
             view.layer.addSublayer(dotLayer)
             
         }
@@ -326,13 +280,14 @@ class ImagesViewController: UIViewController  {
         
         location = touch!.location(in: self.view)
         
+        //touch in ball
         let dist = (location.x - CGFloat(circlePostionX))  *  (location.x - CGFloat(circlePostionX))
                  + (location.y - CGFloat(circlePostionY))  *  (location.y - CGFloat(circlePostionY))
 
         if  dist.squareRoot() <= CGFloat(circleRadius) {
             //drawing plots
             dotLayer.path = UIBezierPath(ovalIn: CGRect(x: location.x, y: location.y, width: 2, height: 2)).cgPath;
-            dotLayer.strokeColor = UIColor.blue.cgColor
+            dotLayer.strokeColor = UIColor.green.cgColor
             view.layer.addSublayer(dotLayer)
             
             ViewPositionY.text = location.y.description
@@ -344,8 +299,8 @@ class ImagesViewController: UIViewController  {
                 
             }
             else if !PhotoArray.isEmpty {
-                PhotoArray[PhotoPreviewIndex].lightPositionX = location.x - CGFloat(circlePostionX)
-                PhotoArray[PhotoPreviewIndex].lightPositionY = location.y - CGFloat(circlePostionY)
+                PhotoArray[PhotoPreviewIndex].lightPositionX = (location.x - CGFloat(circlePostionX)) / CGFloat(circleRadius)
+                PhotoArray[PhotoPreviewIndex].lightPositionY = (location.y - CGFloat(circlePostionY)) / CGFloat(circleRadius)
             }
             
 
@@ -372,17 +327,10 @@ class ImagesViewController: UIViewController  {
                 var thumbnail = UIImage()
                 option.isSynchronous = true
                 option.resizeMode = PHImageRequestOptionsResizeMode(rawValue: 2)!
-                //todo to mul 3
                 manager.requestImage(for: SelectedAssets[i], targetSize: CGSize(width: img_width, height: img_height), contentMode: PHImageContentMode.aspectFill, options: option, resultHandler: {(result, info)->Void in
                     thumbnail = result!
                     
                 })
-                /*
-                manager.requestImage(for: SelectedAssets[i], targetSize: PHImageManagerMaximumSize, contentMode: .aspectFill, options: option, resultHandler: {(result, info)->Void in
-                    thumbnail = result!
-                    
-                })
-                */
                 
                 let data = thumbnail.jpegData(compressionQuality: 0.7)
                 //let newImage = UIImage(data: data!)
@@ -393,11 +341,6 @@ class ImagesViewController: UIViewController  {
                 print("?",photoArrayTemp.photoImage.size)
                 
             }
-            /*
-            self.imagePreview.animationImages = self.PhotoArray
-            self.imagePreview.animationDuration = 3.0
-            self.imagePreview.startAnimating()
-             */
             
         }
         
@@ -405,31 +348,60 @@ class ImagesViewController: UIViewController  {
         print("complete photo array \(self.PhotoArray)")
     }
     
-    //single image
-    /*
-    @IBAction func importImage(_ sender: Any) {
-        let image = UIImagePickerController()
-        image.delegate = self
-        image.sourceType = UIImagePickerControllerSourceType.photoLibrary
-        image.allowsEditing = false
-        self.present(image, animated: true) {
-            //after it is complete
+    @objc func SelectLightBtnTap() {
+        
+        print("Tap happend")
+        if circleRadius != circleRadiusLarge {
+            circleRadius = circleRadiusLarge
+            circlePostionX = circlePostionXLarge
+            circlePostionY = circlePostionYLarge
         }
+        else{
+            circleRadius = circleRadiusSmall
+            circlePostionX = circlePostionXSmall
+            circlePostionY = circlePostionYSmall
+        }
+        
+        CropImageOverlap.frame = CGRect(x: circlePostionX - circleRadius, y: circlePostionY - circleRadius, width: circleRadius * 2, height: circleRadius * 2)
+        
+        
+        //black circle
+        circleLayer.path = UIBezierPath(ovalIn: CGRect(x: circlePostionX - circleRadius, y: circlePostionY - circleRadius, width: circleRadius * 2, height: circleRadius * 2)).cgPath;
+        //drawing plots
+        dotLayer.path = UIBezierPath(ovalIn: CGRect(x: PhotoArray[PhotoPreviewIndex].lightPositionX * CGFloat(circleRadius) + CGFloat(circlePostionX), y: PhotoArray[PhotoPreviewIndex].lightPositionY * CGFloat(circleRadius) + CGFloat(circlePostionY), width: 2, height: 2)).cgPath;
+        dotLayer.strokeColor = UIColor.green.cgColor
+        view.layer.addSublayer(dotLayer)
     }
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
-            imagePreview.image = image
-            print("Previewing selected image")
-        }
-        else {
-            //error message
-            print("Error when import images.")
-        }
-        self.dismiss(animated: true, completion: { () -> Void in
-            
-        })
+    
+    @objc func SelectLightBtnLong() {
+        
+        print("Long press")
+        //loadLightingSelectionSubview()
     }
- */
+    private func loadLightingSelectionSubview() {
+
+        
+        lightingSelectionEnlargeView.isHidden = false
+        print("showing!!")
+        
+        // any other objects should be tied to this view as superView
+        // for example adding this okayButton
+        
+        let okayButtonFrame = CGRect(x: 40, y: 100, width: 50, height: 50)
+        let okayButton = UIButton(frame: okayButtonFrame )
+        
+        // here we are adding the button its superView
+        lightingSelectionEnlargeView.addSubview(okayButton)
+        
+        okayButton.addTarget(self, action: #selector(self.didPressButtonFromCustomView), for:.touchUpInside)
+        
+    }
+    @objc func didPressButtonFromCustomView(sender:UIButton) {
+        print("touched")
+        lightingSelectionEnlargeView.isHidden = true
+    }
+
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -441,7 +413,24 @@ class ImagesViewController: UIViewController  {
         
         //create new image view
         CropImageOverlap  = UIImageView(frame: CGRect(x: circlePostionX - circleRadius, y: circlePostionY - circleRadius, width: circleRadius * 2, height: circleRadius * 2));
-
+        
+        //select light button
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector (SelectLightBtnTap))  //Tap function will call when user tap on button
+        let longGesture = UILongPressGestureRecognizer(target: self, action: #selector(SelectLightBtnLong))  //Long function will call when user long press on button.
+        longGesture.minimumPressDuration = 1.0
+        tapGesture.numberOfTapsRequired = 1
+        SelectLightBtn.addGestureRecognizer(tapGesture)
+        SelectLightBtn.addGestureRecognizer(longGesture)
+        
+        //light selection subview
+        /*
+        let customViewFrame = CGRect(x: 0.0, y: 0.0, width: 300.0, height: 300.0)
+        lightingSelectionEnlargeView = UIView(frame: customViewFrame)
+        
+        view.addSubview(lightingSelectionEnlargeView)
+        lightingSelectionEnlargeView.backgroundColor = UIColor.red
+        lightingSelectionEnlargeView.isHidden = true
+        */
         
     }
     
@@ -451,15 +440,7 @@ class ImagesViewController: UIViewController  {
     }
 
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
+ 
     
 
 }
