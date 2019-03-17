@@ -48,8 +48,8 @@ class ImagesViewController: UIViewController  {
     var img_scale = 1.0
     
     //select circle
-    var SliderCircleXVar = 0
-    var SliderCircleYVar = 0
+    var SliderCircleXVar = 100
+    var SliderCircleYVar = 300
     var SliderCircleRVar = 25
     var lightPos : float2 = [0.0, 0.0]
     
@@ -96,22 +96,33 @@ class ImagesViewController: UIViewController  {
             break
         }
     }
-    
-    @IBAction func SliderCircleX(_ sender: UISlider) {
-        if circleRadius == circleRadiusSmall{
-            SliderCircleXVar = Int(sender.value)
-            drawSelectedCircle()
-        }
-    }
-    @IBAction func SliderCircleY(_ sender: UISlider) {
-        if circleRadius == circleRadiusSmall{
-            SliderCircleYVar = Int(sender.value)
-            drawSelectedCircle()
-        }
-    }
     @IBAction func SliderCircleR(_ sender: UISlider) {
-            if circleRadius == circleRadiusSmall{
+        if circleRadius == circleRadiusSmall{
             SliderCircleRVar = Int(sender.value)
+            drawSelectedCircle()
+        }
+    }
+    @IBAction func SliderCircleXMinus(_ sender: Any) {
+        if circleRadius == circleRadiusSmall{
+            SliderCircleXVar -= 1
+            drawSelectedCircle()
+        }
+    }
+    @IBAction func SliderCircleXAdd(_ sender: Any) {
+        if circleRadius == circleRadiusSmall{
+            SliderCircleXVar += 1
+            drawSelectedCircle()
+        }
+    }
+    @IBAction func SliderCircleYMinus(_ sender: Any) {
+        if circleRadius == circleRadiusSmall{
+            SliderCircleYVar -= 1
+            drawSelectedCircle()
+        }
+    }
+    @IBAction func SliderCircleYAdd(_ sender: Any) {
+        if circleRadius == circleRadiusSmall{
+            SliderCircleYVar += 1
             drawSelectedCircle()
         }
     }
@@ -169,7 +180,7 @@ class ImagesViewController: UIViewController  {
             self.imagePreview.image = PhotoArray[PhotoPreviewIndex].photoImage
             
             UIGraphicsBeginImageContextWithOptions(CGSize(width: CGFloat(Int(Double(SliderCircleRVar) * 2.0 * img_scale)), height: CGFloat(Int(Double(SliderCircleRVar) * 2.0 * img_scale))), true, CGFloat(1.0))
-            PhotoArray[PhotoPreviewIndex].photoImage.draw(at: CGPoint(x: -Double(SliderCircleXVar) * img_scale, y: (-Double(SliderCircleYVar) * img_scale + 218.0 * img_scale ) ))
+            PhotoArray[PhotoPreviewIndex].photoImage.draw(at: CGPoint(x: -Double(SliderCircleXVar - SliderCircleRVar) * img_scale, y: (-Double(SliderCircleYVar - SliderCircleRVar) * img_scale + 218.0 * img_scale ) ))
             let croppedImage = UIGraphicsGetImageFromCurrentImageContext()
             UIGraphicsEndImageContext()
             self.CropImageOverlap.image = croppedImage
@@ -198,7 +209,7 @@ class ImagesViewController: UIViewController  {
             
             //crop image
             UIGraphicsBeginImageContextWithOptions(CGSize(width: CGFloat(Int(Double(SliderCircleRVar) * 2.0 * img_scale)), height: CGFloat(Int(Double(SliderCircleRVar) * 2.0 * img_scale))), true, CGFloat(1.0))
-            PhotoArray[PhotoPreviewIndex].photoImage.draw(at: CGPoint(x: -Double(SliderCircleXVar) * img_scale, y: (-Double(SliderCircleYVar) * img_scale + 218.0 * img_scale ) ))
+            PhotoArray[PhotoPreviewIndex].photoImage.draw(at: CGPoint(x: -Double(SliderCircleXVar - SliderCircleRVar) * img_scale, y: (-Double(SliderCircleYVar - SliderCircleRVar) * img_scale + 218.0 * img_scale ) ))
             let croppedImage = UIGraphicsGetImageFromCurrentImageContext()
             print(croppedImage?.size)
             UIGraphicsEndImageContext()
@@ -306,11 +317,21 @@ class ImagesViewController: UIViewController  {
 
         }
         
+        //select ball
+        if circleRadius == circleRadiusSmall {
+            print(location)
+            if location.x <= 256 && location.y > 218 && location.y < 412 + 218 {
+                SliderCircleXVar = Int(location.x)
+                SliderCircleYVar = Int(location.y)
+            }
+            drawSelectedCircle()
+        }
+        
     }
     
     //draw circle on the image
     func drawSelectedCircle() {
-        sqaureUponImage.path = UIBezierPath(ovalIn: CGRect(x: Double(SliderCircleXVar), y: Double(SliderCircleYVar), width: Double(SliderCircleRVar) * 2, height: Double(SliderCircleRVar) * 2)).cgPath;
+        sqaureUponImage.path = UIBezierPath(ovalIn: CGRect(x: Double(SliderCircleXVar - SliderCircleRVar), y: Double(SliderCircleYVar - SliderCircleRVar), width: Double(SliderCircleRVar) * 2, height: Double(SliderCircleRVar) * 2)).cgPath;
         sqaureUponImage.opacity = 0.5
         view.layer.addSublayer(sqaureUponImage)
     }
