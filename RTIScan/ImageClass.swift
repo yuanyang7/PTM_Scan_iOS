@@ -162,21 +162,41 @@ class ProcessingImage {
         //self.vectorY_B = [Vector](repeating: temp, count: imageWidth*imageHeight*imageNum)
         
     }
-    
-    func normalizedLight() {
-        for (_, image) in toProcessImage.enumerated() {
-            //image.lightPositionX /= CGFloat(50.0)
-            //image.lightPositionY /= CGFloat(50.0)
-            print(image.lightPositionX, image.lightPositionY)
-            //todo
-            /*
-            image.lightPositionZ = sqrt(image.lightPositionX * image.lightPositionX
-                                      + image.lightPositionY * image.lightPositionY)
-            //todo: normalized mag
-            image.lightPositionX /= image.lightPositionZ
-            image.lightPositionY /= image.lightPositionZ
-            image.lightPositionZ = 1
-            */
+    func LocateLight(ballR_in : Int, ballX_in : Int, ballY_in : Int, scale : Double) {
+        let ballR = Int(Double(ballR_in) * scale)
+        let ballY = Int(Double(ballY_in) * scale)
+        let ballX = Int(Double(ballX_in) * scale)
+        for index in 0..<imageNum {
+            
+            var max = 0.0
+            let img = toProcessImage[index].photoImage
+            let pixelData = img.cgImage!.dataProvider!.data
+            let data: UnsafePointer<UInt8> = CFDataGetBytePtr(pixelData)
+            print(ballX, ballY, ballR)
+            for x in Int(ballX - ballR)...Int(ballX + ballR){
+                for y in Int(ballY - ballR)...Int(ballY + ballR) {
+                    let dist_X = (x - ballX) * (x - ballX)
+                    let dist_Y = (y - ballY) * (y - ballY)
+                    let dist = dist_X + dist_Y
+                    if(dist  - ballR * ballR <= 0) {
+                        let pixelInfo: Int = ((imageWidth * y) + x) * 4
+                        
+                        let r = Double(data[pixelInfo])     / Double(255.0)
+                        let g = Double(data[pixelInfo + 1]) / Double(255.0)
+                        let b = Double(data[pixelInfo + 2]) / Double(255.0)
+                        let light = r * 0.2126 + g * 0.7152 + b * 0.0722
+                        print(x,y,r,g,b, (Double(x) - Double(ballX)) / (Double(ballR)), (Double(y) - Double(ballY)) / (Double(ballR)))
+                        if(max <= light){
+                            max = light
+                            self.toProcessImage[index].lightPositionX = CGFloat((Double(x) - Double(ballX)) / (Double(ballR)))
+                            self.toProcessImage[index].lightPositionY = CGFloat((Double(y) - Double(ballY)) / (Double(ballR)))
+                            
+                            print(x,y,max)
+                        }
+                    }
+                }
+            }
+            print(max, toProcessImage[index].lightPositionX , toProcessImage[index].lightPositionY)
         }
     }
     func renderImageResult(l_u_raw : Double, l_v_raw : Double) {

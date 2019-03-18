@@ -253,6 +253,14 @@
                                     <action selector="SliderCircleYAdd:" destination="wuH-af-Chn" eventType="touchUpInside" id="b5G-dv-JdD"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FxZ-aY-ksb">
+                                <rect key="frame" x="274" y="218" width="85" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Locate Light"/>
+                                <connections>
+                                    <action selector="LocateLight:" destination="wuH-af-Chn" eventType="touchUpInside" id="cIC-Wk-GKc"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="N4d-vB-Jvc"/>

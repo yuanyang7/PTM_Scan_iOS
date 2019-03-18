@@ -68,13 +68,11 @@ class ImagesViewController: UIViewController  {
     @IBOutlet weak var ViewPositionY: UILabel!
     @IBOutlet weak var ViewPositionX: UILabel!
     @IBAction func imageProcess(_ sender: Any) {
-        
-        PImage = ProcessingImage(toProcessImage: PhotoArray, imageNum : PhotoArray.count, imageWidth : Int(PhotoArray[0].photoImage.size.width), imageHeight : Int(PhotoArray[0].photoImage.size.height))
-        //normalize light position todo
-        PImage.normalizedLight()
+        if(PImage == nil){
+            PImage = ProcessingImage(toProcessImage: PhotoArray, imageNum : PhotoArray.count, imageWidth : Int(PhotoArray[0].photoImage.size.width), imageHeight : Int(PhotoArray[0].photoImage.size.height))
+        }
         //form matrix
         PImage.calcMatrix()
-
         
     }
   
@@ -125,6 +123,13 @@ class ImagesViewController: UIViewController  {
             SliderCircleYVar += 1
             drawSelectedCircle()
         }
+    }
+    @IBAction func LocateLight(_ sender: Any) {
+        if(PImage == nil){
+            PImage = ProcessingImage(toProcessImage: PhotoArray, imageNum : PhotoArray.count, imageWidth : Int(PhotoArray[0].photoImage.size.width), imageHeight : Int(PhotoArray[0].photoImage.size.height))
+        }
+        PImage.LocateLight(ballR_in: SliderCircleRVar, ballX_in: SliderCircleXVar, ballY_in: SliderCircleYVar - 218, scale: img_scale)
+        
     }
     @IBOutlet weak var SelectLightBtn: UIButton!
     
@@ -211,12 +216,10 @@ class ImagesViewController: UIViewController  {
             UIGraphicsBeginImageContextWithOptions(CGSize(width: CGFloat(Int(Double(SliderCircleRVar) * 2.0 * img_scale)), height: CGFloat(Int(Double(SliderCircleRVar) * 2.0 * img_scale))), true, CGFloat(1.0))
             PhotoArray[PhotoPreviewIndex].photoImage.draw(at: CGPoint(x: -Double(SliderCircleXVar - SliderCircleRVar) * img_scale, y: (-Double(SliderCircleYVar - SliderCircleRVar) * img_scale + 218.0 * img_scale ) ))
             let croppedImage = UIGraphicsGetImageFromCurrentImageContext()
-            print(croppedImage?.size)
             UIGraphicsEndImageContext()
             self.CropImageOverlap.image = croppedImage
             self.view.addSubview(CropImageOverlap)
             view.layer.addSublayer(circleLayer)
-            
             //drawing plots
             dotLayer.path = UIBezierPath(ovalIn: CGRect(x: PhotoArray[PhotoPreviewIndex].lightPositionX * CGFloat(circleRadius) + CGFloat(circlePostionX), y: PhotoArray[PhotoPreviewIndex].lightPositionY * CGFloat(circleRadius) + CGFloat(circlePostionY), width: 2, height: 2)).cgPath;
             dotLayer.strokeColor = UIColor.green.cgColor
